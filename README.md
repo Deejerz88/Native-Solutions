@@ -18,7 +18,7 @@ https://docs.google.com/presentation/d/1nGrTX_2XfR8wvwzwZbxch7p7uk7egDwGDdN2jU5i
 
 # Overview
 
-Create a database of information about wildlife in specific zip codes.
+A website with a database of information about wildlife in specific zip codes.
 
 ## Summary
 
