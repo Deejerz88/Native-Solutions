@@ -22,7 +22,7 @@ A website with a database of information about wildlife in specific zip codes.
 
 ## Summary
 
-This project contains a list of information about plants and animals that users can search up by entering a zip code which will use APIs such as Google Maps, USDA Plant Database, NWF and IUCN Red List to create a database of information for wildlife in that area.
+This project contains a list of information about plants and animals that users can search up by entering a zip code which will use APIs such as Google Maps, USDA Plant Database, NWF, and IUCN Red List to create a database of information for wildlife in that area.
 
 ## Links
 
