@@ -5,4 +5,38 @@ https://docs.google.com/presentation/d/1nGrTX_2XfR8wvwzwZbxch7p7uk7egDwGDdN2jU5i
 <img src="assets/images/wireframe.png">
 
 
+# Native Solutions Project
 
+> By DJ McMillan, Singharaj Usai, Jase Mucene and John Case
+
+## Index
+1. [Overview](#overview)
+    - [Summary](#summary)
+    - [Links](#links)
+    - [Screenshots](#screenshots)
+    - [Made with](#made-with)
+
+# Overview
+
+Create a database of information about wildlife in of specific zip codes.
+
+## Summary
+
+This project contains a list of information about plants and animals that users can search up by zip code which will use APIs such as Google Maps, USDA Plant Database, NWF and IUCN Red List to create a database of information for wildlife in that area.
+
+## Links
+
+Live Site URL: 
+
+Repository URL:
+
+## Screenshots
+* Title
+    * Description
+![](./Screenshots/)
+
+## Made With
+
+* HTML5
+* CSS
+* Javascript
