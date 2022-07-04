@@ -118,6 +118,7 @@ body {
     background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
+    
 }
 
 /* Style the links inside the navigation bar */
@@ -126,6 +127,7 @@ body {
     padding: 14px 16px;
     text-decoration: none;
     font-size: 14px;
+
 }
 
 .alert .alert-link {
@@ -144,21 +146,23 @@ body {
     padding: 10px;
 }
 
-.center {
-    text-align: center;
-}
 
+
+.flex-container {
+    text-align: center;
+    font-size: 20px;
+}
 
 /* Add a white background color to the Footer */
 .footer {
     background-color: rgb(255, 255, 255);
     color: #7c7c7c;
     display: flex;
-    padding: 14px 16px;
     justify-content: center;  
+    padding: 10px;
     bottom:0;
     position:absolute;
     width:100%;
-    
-     
+    text-align: center;
 }
+
