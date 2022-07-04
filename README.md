@@ -26,9 +26,9 @@ This project contains a list of information about plants and animals that users 
 
 ## Links
 
-Live Site URL: 
+Live Site URL: https://deejerz88.github.io/Native-Solutions/
 
-Repository URL:
+Repository URL: https://github.com/Deejerz88/Native-Solutions
 
 ## Screenshots
 * Title
