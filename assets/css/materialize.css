@@ -2391,6 +2391,7 @@ button,
 input {
   /* 1 */
   overflow: visible;
+  
 }
 
 /**
@@ -4437,6 +4438,7 @@ nav form {
 nav .input-field {
   margin: 0;
   height: 100%;
+  
 }
 
 nav .input-field input {
@@ -6298,6 +6300,7 @@ input[type=number]:not(.browser-default).validate + label,
 input[type=search]:not(.browser-default).validate + label,
 textarea.materialize-textarea.validate + label {
   width: 100%;
+  
 }
 
 /* Validation Sass Placeholders */
@@ -6510,6 +6513,8 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
   position: relative;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  width: 50%;
+  
 }
 
 .input-field.inline {
