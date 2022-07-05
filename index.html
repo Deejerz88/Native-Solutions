@@ -13,18 +13,38 @@
     <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="./assets/css/hover.css">
     <link type="text/css" rel="stylesheet" href="./assets/css/materialize.css"  media="screen,projection"/>
-    
+
+    <script>
+        $(document).ready(function(){
+            $('.sidenav').sidenav();
+        })
+    </script>
+
 </head>
 
 <body>
-    <nav class="topnav">
+    <nav class="white" style="padding:0px 10px;">
+        <div class="nav-wrapper">
         <!--Top navigation bar that redirects to home page-->
-        <label class="logo">Native Solutions</label>
-        <ul>
+        <a href="#" class="brand-logo">Native Solutions</a>
+
+        <a href="#" class="sidenav-trigger" data-target="mobile-nav">
+            <i class="material-icon">menu</i>
+        </a>
+
+        <ul class="right hide-on-med-and-down">
             <li><a href="index.html">Home</a></li>
             <li><a href="index.html">idk</a></li>
         </ul>
+    </div>
     </nav>
+
+
+
+    <ul class="sidenav" id="mobile-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Home</a></li>
+    </ul>
 
     <div class="alert alert-warning center">
         <b style="color:rgb(255, 255, 255)!important">
@@ -36,6 +56,8 @@
     </div>
 
     <br>
+
+
 
     <div class="flex-container">
         <div class="buttons">
@@ -57,7 +79,8 @@
     </footer>
     
     <script type="text/javascript" src="./assets/js/script.js"></script>
-    <script type="text/javascript" src="./assets/js/materialize.min.js"></script>
-
+  <!--  <script type="text/javascript" src="./assets/js/ -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script> --> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 </body>
 </html>
