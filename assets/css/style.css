@@ -93,8 +93,9 @@ video {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-
     font:bold 14px Aria,sans-serif;
+    list-style: none;
+    text-decoration: none;
 }
 
 html {
@@ -102,52 +103,6 @@ html {
     background: white;
     background: radial-gradient(circle, #fff 20%, #ccc);
     background-size: cover;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14;
-    line-height: 1.5;
-}
-
-
-/* Add a white background color to the top navigation */
-.topnav {
-    background-color: rgb(255, 255, 255);
-    display: flex;
-    align-items: center;
-    width: 100%;
-    
-}
-
-/* Style the links inside the navigation bar */
-.topnav a {
-    color: #7c7c7c;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 14px;    
-}
-
-label.logo {
-    font-size: 35px;
-    padding: 0 10px;
-    color: green;
-    line-height: 80px;
-
-}
-
-
-.topnav ul {
-    float: right;
-    margin-right: 30px;
-}
-
-.topnav ul li {
-    display: inline-block;
-    line-height: 80px;
-    margin: 0px 5px;
 }
 
 
@@ -162,6 +117,7 @@ label.logo {
     background-color:darkorange;
     color: #f2f2f2;
     justify-content: center;
+    height: 100%;
 }
 
 .alert {
@@ -171,8 +127,13 @@ label.logo {
 .flex-container {
     justify-content: center;  
     font-size: 20px;
-    padding: 10px 10px;
+    width:100%;
     display: flex;
+
+}
+
+.buttons {
+    padding: 0 10px;
 }
 
 /* Add a white background color to the Footer */
@@ -181,7 +142,7 @@ label.logo {
     color: #7c7c7c;
     display: flex;
     justify-content: center;  
-    padding: 10px;
+    padding: 5px;
     bottom:0;
     position:absolute;
     width:100%;
