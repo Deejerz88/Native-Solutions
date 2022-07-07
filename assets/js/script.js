@@ -165,22 +165,30 @@ const createCard = (data) => {
   action.addClass("card-action");
 
   // getImage()
-  let rnd1 = Math.random() * 1000 << 0
+  let rnd1 = (Math.random() * 1000) << 0;
   let rnd2 = (Math.random() * 1000) << 0;
   img.attr({ src: `http://placekitten.com/${rnd1}/${rnd2}` });
-  img.css('width',100)
-  title.text("sciName");
+  img.css({ width: 100, height: 100 });
+
+  title.text(sciName);
+  title.css({ color: "black" });
+
   icon.text("add");
+
   content.text(commonName);
-  link.attr({
-    href: `https://explorer.natureserve.org/Taxon/${id}/${sciName}`,
-  });
+  content.css({ color: "black" });
+
+  link
+    .attr({
+      href: `https://explorer.natureserve.org/Taxon/${id}/${sciName}`,
+    })
+    .text("More Info");
 
   fab.append(icon);
   action.append(link);
   imgContainer.append(img, title, fab);
-  card.append(imgContainer)
-  cardContainer.append(card,action);
+  card.append(imgContainer, content, action);
+  cardContainer.append(card);
 
   // https://materializecss.com/cards.html
   //
