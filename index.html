@@ -1,104 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-    
-<head>
-    <meta charset="UTF-8"/>
+  <head>
+    <meta charset="UTF-8" />
     <title>Native Solutions</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="description" content="Information About Native Species and Wildlife">
-    <meta name="keywords" content="Plants, Animals, Native Species, Native Solutions, Exotic, Wildlife, Scientific Names, Outdoors">
-    <meta name="author" content="Singharaj Usai">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
-    <link rel="stylesheet" type="text/css" href="./assets/css/hover.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta
+      name="description"
+      content="Information About Native Species and Wildlife"
+    />
+    <meta
+      name="keywords"
+      content="Plants, Animals, Native Species, Native Solutions, Exotic, Wildlife, Scientific Names, Outdoors"
+    />
+    <meta name="author" content="Singharaj Usai" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/hover.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="./assets/css/materialize.css"  media="screen,projection"/>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="./assets/css/materialize.css"
+      media="screen,projection"
+    />
 
     <script>
-        $(document).ready(function(){
-            $('.sidenav').sidenav();
-        })
+      $(document).ready(function () {
+        $(".sidenav").sidenav();
+      });
     </script>
 
-    
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </head>
 
-</head>
-
-<body>
+  <body>
     <header>
-    <nav class="nav-extended">
+      <nav class="nav-extended">
         <div class="nav-wrapper">
           <a href="index.html" class="brand-logo center">Native Solutions</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+            <i class="material-icons">menu</i>
+          </a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
-            <li><a href="https://github.com/Deejerz88/Native-Solutions">GitHub Repository</a></li>
+            <li>
+              <a href="https://github.com/Deejerz88/Native-Solutions">
+                GitHub Repository
+              </a>
+            </li>
           </ul>
         </div>
-        
       </nav>
-    
+
       <ul class="sidenav" id="mobile-demo">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About Us</a></li>
-        <li><a href="https://github.com/Deejerz88/Native-Solutions">GitHub Repository</a></li>
+        <li>
+          <a href="https://github.com/Deejerz88/Native-Solutions">
+            GitHub Repository
+          </a>
+        </li>
       </ul>
 
-    <div class="alert alert-warning center">
-        <b style="color:rgb(255, 255, 255)!important">
-        Note
-        </b> - This is a work-in-progress project.
-        (<a class="alert-link" href="https://github.com/Deejerz88/Native-Solutions">
-        Check out the repository!
-        </a>)
-    </div>
-</header>
-    <br>
-<main>
-    <div class="column">
+      <div class="alert alert-warning center">
+        <b style="color: rgb(255, 255, 255) !important">Note</b>
+        - This is a work-in-progress project. (
+        <a
+          class="alert-link"
+          href="https://github.com/Deejerz88/Native-Solutions"
+        >
+          Check out the repository!
+        </a>
+        )
+      </div>
+    </header>
+    <br />
+    <main>
+      <div class="column">
         <form class="col s12">
           <div class="column">
             <div class="input-field col s6">
-                <input id="searchinput" type="text" class="validate">
-                <label for="searchinput">
-                Enter Zip Code
-            </label>
+              <input id="searchinput" type="text" class="validate" />
+              <label for="searchinput">Enter Zip Code</label>
             </div>
-          </div> 
+          </div>
           <div class="flex-container">
             <div class="buttons">
-                <button id="searchbutton" class="btn hvr-grow" type="button">
-                    Search Location
-                </button>
-
+              <button id="searchbutton" class="btn hvr-grow" type="button">
+                Search Location
+              </button>
             </div>
-        </div>   
+          </div>
         </form>
       </div>
-      <section id="search-results"></section>
-</main>
+      <section id="search-results" class="row">
+          <div id="card-container" class="col s12 m6"></div>
+      </section>
+    </main>
 
-    
     <footer class="footer">
-        <div style="margin-bottom:0">
-            <!--Footer-->
-            <h5 style="font-size:18px">Created by The Native Solutions Team</h5>
-            <p style="margin-bottom:10px">All rights belong to their respective owners</p>
-        </div>
+      <div style="margin-bottom: 0">
+        <!--Footer-->
+        <h5 style="font-size: 18px">Created by The Native Solutions Team</h5>
+        <p style="margin-bottom: 10px">
+          All rights belong to their respective owners
+        </p>
+      </div>
     </footer>
-    
+
     <script type="text/javascript" src="./assets/js/script.js"></script>
-  <!--  <script type="text/javascript" src="./assets/js/ -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script> --> 
-
-
-</body>
+    <!--  <script type="text/javascript" src="./assets/js/ -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script> -->
+  </body>
 </html>
