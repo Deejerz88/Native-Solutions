@@ -17,7 +17,7 @@ fetch(apiURL).then((res) => {
     });
 });
 
-const subtmitHandler = (e) => {
+const submitHandler = (e) => {
   e.preventDefault();
   const location = getState(searchInput.val());
 };
@@ -89,7 +89,7 @@ const getData = (location) => {
   });
 };
 
-searchBtn.on("click", subtmitHandler);
+searchBtn.on("click", submitHandler);
 
 const getPlantInfo = () => {
   //Get Plant Info
