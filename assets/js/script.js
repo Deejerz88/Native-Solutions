@@ -54,7 +54,7 @@ const getState = (location) => {
 const getData = (location) => {
   //Search for plants/animals
   let url = "https://explorer.natureserve.org/api/data/speciesSearch";
-  //quick search, status (endangerment), location (Country, state), species taxonomy (scientific & informal searches),
+  //Future Filters: quick search, status (endangerment), location (Country, state), species taxonomy (scientific & informal searches),
   let searchCriteria = {};
   // const taxSearch = taxonomyEl.val()
   searchCriteria.criteriaType = "species";
@@ -150,32 +150,52 @@ const createCard = (data) => {
   const imgContainer = $("<div>");
   const img = $("<img>");
   const title = $("<span>");
-  const fab = $("<a>");
-  const icon = $("<i>");
-  const content = $("<details>");
+  const fabDiv = $("<div>");
+  const content = $("<section>");
   const action = $("<footer>");
   const link = $("<a>");
+  const icons = $("i");
 
   card.addClass("card");
   imgContainer.addClass("card-image");
   title.addClass("card-title");
-  fab.addClass("btn-floating halfway-fab waves-effect waves-light red");
-  icon.addClass("material-icons");
+  fabDiv.addClass("fixed-action-btn");
+  iconLink1.addClass("btn-floating halfway-fab waves-effect waves-light red");
+  fabDiv.append(iconLink1);
+
+  for (let i = 0; i < 4; i++){
+    const listEl = $("<li>");
+    const anchor = $("<a>");
+    const icon = $('<i>')
+    const iconText = [
+      "mode_edit",
+      "insert_chart",
+      "format_quote",
+      "publish",
+      "attach_file",
+    ];
+    const anchorClass = 
+  
+    icon.addClass("material-icons");
+    icon.text(iconText[i]);
+    
+  }
+
+
   content.addClass("card-content");
   action.addClass("card-action");
 
   // getImage()
-  let rnd1 = (Math.random() * 1000) << 0;
-  let rnd2 = (Math.random() * 1000) << 0;
+  let rnd1 = (Math.random() * 100) << 0;
+  let rnd2 = (Math.random() * 100) << 0;
   img.attr({ src: `http://placekitten.com/${rnd1}/${rnd2}` });
   img.css({ width: 100, height: 100 });
 
-  title.text(sciName);
+  title.text(commonName);
   title.css({ color: "black" });
 
-  icon.text("add");
 
-  content.text(commonName);
+  content.text(sciName);
   content.css({ color: "black" });
 
   link
@@ -184,7 +204,6 @@ const createCard = (data) => {
     })
     .text("More Info");
 
-  fab.append(icon);
   action.append(link);
   imgContainer.append(img, title, fab);
   card.append(imgContainer, content, action);
@@ -217,3 +236,7 @@ const getImage = (species, kingdom) => {
       });
   });
 };
+
+$(document).ready(() => {
+  $(".fixed-action-btn").floatingActionButton();
+});
