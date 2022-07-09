@@ -128,17 +128,6 @@ const getOrganismInfo = (id) => {
 };
 
 const createCard = (data) => {
-  //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
-  //
-  //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
-  //
-  //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
-  //
-  //endangerment(grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds })
-  //
-  //elementManagement { stewardshipOverview, biologicalResearchNeeds}
-  //
-  //nameCategory, primaryCommonName, formattedScientificName, family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy, references, elementNationals, elementSubnationals
   //
 
   const sciName = data.scientificName;
@@ -186,7 +175,6 @@ const createCard = (data) => {
   icon.addClass("material-icons").text("info");
   fab.append(icon);
 
-  // animalCharacteristics.mobilityMigrationComments;
   content.html(
     `<b>Scientific Name:</b> ${sciName} <p>${data.animalCharacteristics.mobilityMigrationComments}`
   );
@@ -198,6 +186,12 @@ const createCard = (data) => {
     })
     .text("Add to Favorites");
   action.append(link);
+
+  fab.on("click", (e) => {
+    console.log(e);
+    console.log(data);
+    populateSidenav(data);
+  });
 
   imgContainer.append(img, title, fab);
   card.append(imgContainer, content, action);
@@ -217,62 +211,78 @@ const getImage = (species, kingdom) => {
   });
 };
 
-
 //sideNav
-const sideNav = $("<ul>");
-const collapsible = $("<ul>");
-const title = $("<h2>");
-// const background = $('<div>')
-// const bgImg = $('<img>')
 
-title.text("Oranism Name")
-sideNav.addClass("sidenav").attr({ id: "slide-out" });
-sideNav.append(title,$("<br><li>").addClass('no padding').append(collapsible));
-const categories = [
-  "General Info",
-  "Species Characteristics",
-  "Animal Characteristics",
-  "Plant Characteristics",
-  "Endangerment",
-];
-collapsible.addClass("collapsible popout");
 
-categories.forEach((category) => {
-  const content = $("<li>");
-  const header = $("<a>");
-  const body = $("<div>");
-  const info = $("<ul>");
-  const bodyText = $("<span>");
+const populateSidenav = (data) => {
+  sideNav.empty()
+  const collapsible = $("<ul>");
+  const title = $("<h2>");
+  // const background = $('<div>')
+  // const bgImg = $('<img>')
+
+  const general = data.speciesGlobal
+  title.text(data.primaryCommonName);
   
-  // const icon = $("<i>");
-
-  
-  header.attr({ href: '#!'}).addClass("collapsible-header");
-  // icon.addClass("material-icons");
-  body.addClass("collapsible-body");
-
-  // icon.text("info");
-  header.html(`<b>${category}</b>`);
-  bodyText.text(
-    "Category Information: Quis eu velit nostrud labore labore do quis aliquip nisi minim nisi officia anim pariatur. Cillum eiusmod est adipisicing laborum quis proident ullamco ut mollit culpa. Laborum occaecat ipsum laboris culpa culpa nisi. Aute magna deserunt sint consequat sunt culpa ex incididunt occaecat. Aliqua exercitation occaecat ad tempor id voluptate exercitation exercitation ea laborum cillum deserunt."
+  sideNav.append(
+    title,
+    $("<br><li>").addClass("no padding").append(collapsible)
   );
-  
-  content.append( header, body.append(info.append($('<li>').append(bodyText))))
+  const categories = [
+    "General Info",
+    "Species Characteristics",
+    "Animal Characteristics",
+    "Plant Characteristics",
+    "Endangerment",
+  ];
+  collapsible.addClass("collapsible popout");
+
+  categories.forEach((category) => {
+    //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
+    //
+    //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
+    //
+    //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
+    //
+    //endangerment: grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds }
+    //
+    //elementManagement { stewardshipOverview, biologicalResearchNeeds}
+    //
+    //General Info: nameCategory, primaryCommonName, formattedScientificName, speciesGlobal {family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy} references, elementNationals, elementSubnationals
+    const content = $("<li>");
+    const header = $("<a>");
+    const body = $("<div>");
+    const info = $("<ul>");
+    const bodyText = $("<span>");
+
+    // const icon = $("<i>");
+
+    header.attr({ href: "#!" }).addClass("collapsible-header");
+    // icon.addClass("material-icons");
+    body.addClass("collapsible-body");
+
+    // icon.text("info");
+    header.html(`<b>${category}</b>`);
+    if (category === "General Info") bodyText.html(`<p><b>Kingdom: </b>${general.kingdom}</p> `);
+
+    content.append(
+      header,
+      body.append(info.append($("<li>").append(bodyText)))
+    );
     // , body.append(ul).append($("<li>").append(bodyText)));
-  collapsible.append(content);
-  // console.log(sideNav.children('a'))
-});
-
-$("body").append(sideNav);
-
-// $(document).ready(function () {
-//   $(".sidenav").sidenav();
-// });
-document.addEventListener("DOMContentLoaded", function () {
-  var elems = document.querySelectorAll(".sidenav");
-  var instances = M.Sidenav.init(elems, {draggable:true});
-});
-
-  $(document).ready(function () {
-    $(".collapsible").collapsible();
+    collapsible.append(content);
+    // console.log(sideNav.children('a'))
   });
+   $(".collapsible").collapsible();
+};
+
+const sideNav = $("<ul>");
+$("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));
+
+$(document).ready(function () {
+  $(".sidenav").sidenav();
+});
+
+$(document).ready(function () {
+ 
+});
