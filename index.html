@@ -32,11 +32,6 @@
       media="screen,projection"
     />
 
-    <script>
-      $(document).ready(function () {
-        $(".sidenav").sidenav();
-      });
-    </script>
 
     <!-- Compiled and minified CSS -->
     <link
@@ -53,9 +48,6 @@
       <nav class="nav-extended">
         <div class="nav-wrapper">
           <a href="index.html" class="brand-logo center">Native Solutions</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger">
-            <i class="material-icons">menu</i>
-          </a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -68,15 +60,6 @@
         </div>
       </nav>
 
-      <ul class="sidenav" id="mobile-demo">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About Us</a></li>
-        <li>
-          <a href="https://github.com/Deejerz88/Native-Solutions">
-            GitHub Repository
-          </a>
-        </li>
-      </ul>
 
       <div class="alert alert-warning center">
         <b style="color: rgb(255, 255, 255) !important">Note</b>
@@ -109,8 +92,7 @@
           </div>
         </form>
       </div>
-      <section id="search-results" class="row">
-          <div id="card-container" class="col s12 m6"></div>
+      <section id="search-results">
       </section>
     </main>
 

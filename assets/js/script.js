@@ -5,7 +5,6 @@ const taxonomyEl = $("#taxonomy");
 const advanced = $("#advanced");
 const endangermentEl = $("#endangerment");
 const locationEl = $("#location");
-const cardContainer = $("#card-container");
 
 //Get API Keys from AWS Lambda
 const apiURL =
@@ -150,37 +149,22 @@ const createCard = (data) => {
   const imgContainer = $("<div>");
   const img = $("<img>");
   const title = $("<span>");
-  const fabDiv = $("<div>");
+  // const fabDiv = $("<div>");
+  const cardContainer = $("<div>");
+  const col = $("<div>");
+  const fab = $("<a>");
+  const icon = $("<i>");
   const content = $("<section>");
   const action = $("<footer>");
   const link = $("<a>");
-  const icons = $("i");
 
+  cardContainer.addClass("row");
+  col.addClass("col s12 m6");
   card.addClass("card");
   imgContainer.addClass("card-image");
   title.addClass("card-title");
-  fabDiv.addClass("fixed-action-btn");
-  iconLink1.addClass("btn-floating halfway-fab waves-effect waves-light red");
-  fabDiv.append(iconLink1);
-
-  for (let i = 0; i < 4; i++){
-    const listEl = $("<li>");
-    const anchor = $("<a>");
-    const icon = $('<i>')
-    const iconText = [
-      "mode_edit",
-      "insert_chart",
-      "format_quote",
-      "publish",
-      "attach_file",
-    ];
-    const anchorClass = 
-  
-    icon.addClass("material-icons");
-    icon.text(iconText[i]);
-    
-  }
-
+  // fabDiv.addClass("row");
+  cardContainer.append(col.append(card));
 
   content.addClass("card-content");
   action.addClass("card-action");
@@ -194,20 +178,33 @@ const createCard = (data) => {
   title.text(commonName);
   title.css({ color: "black" });
 
+  fab
+    .attr({ href: "#", "data-target": "slide-out" })
+    .addClass(
+      "btn-floating halfway-fab waves-effect waves-light red sidenav-trigger"
+    );
+  icon.addClass("material-icons").text("info");
+  fab.append(icon);
 
-  content.text(sciName);
+  // animalCharacteristics.mobilityMigrationComments;
+  content.html(
+    `<b>Scientific Name:</b> ${sciName} <p>${data.animalCharacteristics.mobilityMigrationComments}`
+  );
   content.css({ color: "black" });
 
   link
     .attr({
       href: `https://explorer.natureserve.org/Taxon/${id}/${sciName}`,
     })
-    .text("More Info");
-
+    .text("Add to Favorites");
   action.append(link);
+
   imgContainer.append(img, title, fab);
   card.append(imgContainer, content, action);
   cardContainer.append(card);
+  searchResults.append(card);
+
+  // card.on('click', () => { openSidenav(data) })
 
   // https://materializecss.com/cards.html
   //
@@ -237,6 +234,60 @@ const getImage = (species, kingdom) => {
   });
 };
 
-$(document).ready(() => {
-  $(".fixed-action-btn").floatingActionButton();
+// const openSidenav = (data) => {
+//   // const sideNav = $('<nav>')
+
+//   // $("body").append(sideNav);
+
+// }
+
+//sideNav
+const sideNav = $("<ul>");
+const collapsible = $("<ul>");
+const title = $("<h2>");
+// const background = $('<div>')
+// const bgImg = $('<img>')
+
+// sideNav.text(data.primaryCommonName)
+sideNav.addClass("sidenav").attr({ id: "slide-out" });
+sideNav.append($("<li>").addClass('no padding').append(collapsible));
+const categories = [
+  "General Info",
+  "Species Characteristics",
+  "Animal Characteristics",
+  "Plant Characteristics",
+  "Endangerment",
+];
+collapsible.addClass("collapsible collapsible-accordian");
+
+categories.forEach((category) => {
+  const content = $("<li>");
+  const header = $("<a>");
+  const body = $("<div>");
+  const info = $("<ul>");
+  const bodyText = $("<span>");
+  
+  // const icon = $("<i>");
+
+  
+  header.attr({ href: '#!'}).addClass("collapsible-header");
+  // icon.addClass("material-icons");
+  body.addClass("collapsible-body");
+
+  // icon.text("info");
+  header.text(category);
+  bodyText.text(
+    "Quis eu velit nostrud labore labore do quis aliquip nisi minim nisi officia anim pariatur. Cillum eiusmod est adipisicing laborum quis proident ullamco ut mollit culpa. Laborum occaecat ipsum laboris culpa culpa nisi. Aute magna deserunt sint consequat sunt culpa ex incididunt occaecat. Aliqua exercitation occaecat ad tempor id voluptate exercitation exercitation ea laborum cillum deserunt."
+  );
+  
+  content.append(header, info.append($("<li>").append(bodyText)));
+    // , body.append(ul).append($("<li>").append(bodyText)));
+  collapsible.append(content);
+  // console.log(sideNav.children('a'))
+});
+
+$("body").append(sideNav);
+
+$(document).ready(function () {
+  $(".sidenav").sidenav();
 });
