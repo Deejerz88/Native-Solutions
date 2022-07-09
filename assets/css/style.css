@@ -136,22 +136,13 @@ html {
     padding: 0 10px;
 }
 
-article {
+/* article {
     justify-content: center;
     font-size: 30px;
     width: 100%;
     display: flex;
-}
+} */
 
-<<<<<<< HEAD
-div {
-    justify-content: center;
-    width: 100%;
-    display: flex;
-    padding: 10px;
-}
-=======
->>>>>>> 0d0c18954e608fcd06245f20a967563ef9dce1a9
 
 /* Add a white background color to the Footer */
 .footer {
@@ -166,3 +157,6 @@ div {
     text-align: center;
 }
 
+.sidenav{
+    width: 800px
+}
