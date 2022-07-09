@@ -227,7 +227,7 @@ const title = $("<h2>");
 
 title.text("Oranism Name")
 sideNav.addClass("sidenav").attr({ id: "slide-out" });
-sideNav.append($("<li>").addClass('no padding').append(collapsible));
+sideNav.append(title,$("<br><li>").addClass('no padding').append(collapsible));
 const categories = [
   "General Info",
   "Species Characteristics",
