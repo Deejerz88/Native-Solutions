@@ -203,23 +203,6 @@ const createCard = (data) => {
   card.append(imgContainer, content, action);
   cardContainer.append(card);
   searchResults.append(card);
-
-  // card.on('click', () => { openSidenav(data) })
-
-  // https://materializecss.com/cards.html
-  //
-  //     <div class="card horizontal">
-  //       <div class="card-image">
-  //         <img src="images/sample-1.jpg">
-  //         <span class="card-title">Card Title</span>
-  //         <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-  //       </div>
-  //       <div class="card-content">
-  //         <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-  //       </div>
-  //     </div>
-  //   </div>
-  // </div>
 };
 
 const getImage = (species, kingdom) => {
@@ -234,12 +217,6 @@ const getImage = (species, kingdom) => {
   });
 };
 
-// const openSidenav = (data) => {
-//   // const sideNav = $('<nav>')
-
-//   // $("body").append(sideNav);
-
-// }
 
 //sideNav
 const sideNav = $("<ul>");
@@ -248,7 +225,7 @@ const title = $("<h2>");
 // const background = $('<div>')
 // const bgImg = $('<img>')
 
-// sideNav.text(data.primaryCommonName)
+title.text("Oranism Name")
 sideNav.addClass("sidenav").attr({ id: "slide-out" });
 sideNav.append($("<li>").addClass('no padding').append(collapsible));
 const categories = [
@@ -258,7 +235,7 @@ const categories = [
   "Plant Characteristics",
   "Endangerment",
 ];
-collapsible.addClass("collapsible collapsible-accordian");
+collapsible.addClass("collapsible popout");
 
 categories.forEach((category) => {
   const content = $("<li>");
@@ -275,12 +252,12 @@ categories.forEach((category) => {
   body.addClass("collapsible-body");
 
   // icon.text("info");
-  header.text(category);
+  header.html(`<b>${category}</b>`);
   bodyText.text(
-    "Quis eu velit nostrud labore labore do quis aliquip nisi minim nisi officia anim pariatur. Cillum eiusmod est adipisicing laborum quis proident ullamco ut mollit culpa. Laborum occaecat ipsum laboris culpa culpa nisi. Aute magna deserunt sint consequat sunt culpa ex incididunt occaecat. Aliqua exercitation occaecat ad tempor id voluptate exercitation exercitation ea laborum cillum deserunt."
+    "Category Information: Quis eu velit nostrud labore labore do quis aliquip nisi minim nisi officia anim pariatur. Cillum eiusmod est adipisicing laborum quis proident ullamco ut mollit culpa. Laborum occaecat ipsum laboris culpa culpa nisi. Aute magna deserunt sint consequat sunt culpa ex incididunt occaecat. Aliqua exercitation occaecat ad tempor id voluptate exercitation exercitation ea laborum cillum deserunt."
   );
   
-  content.append(header, info.append($("<li>").append(bodyText)));
+  content.append( header, body.append(info.append($('<li>').append(bodyText))))
     // , body.append(ul).append($("<li>").append(bodyText)));
   collapsible.append(content);
   // console.log(sideNav.children('a'))
@@ -288,6 +265,14 @@ categories.forEach((category) => {
 
 $("body").append(sideNav);
 
-$(document).ready(function () {
-  $(".sidenav").sidenav();
+// $(document).ready(function () {
+//   $(".sidenav").sidenav();
+// });
+document.addEventListener("DOMContentLoaded", function () {
+  var elems = document.querySelectorAll(".sidenav");
+  var instances = M.Sidenav.init(elems, {draggable:true});
 });
+
+  $(document).ready(function () {
+    $(".collapsible").collapsible();
+  });
