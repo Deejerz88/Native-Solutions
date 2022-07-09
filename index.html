@@ -21,8 +21,7 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="./assets/css/hover.css" />
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <link
@@ -32,11 +31,6 @@
       media="screen,projection"
     />
 
-    <script>
-      $(document).ready(function () {
-        $(".sidenav").sidenav();
-      });
-    </script>
 
     
     <!-- Compiled and minified CSS -->
@@ -54,6 +48,7 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
   </head>
 
   <body>
@@ -61,9 +56,6 @@
       <nav class="nav-extended">
         <div class="nav-wrapper">
           <a href="index.html" class="brand-logo center">Native Solutions</a>
-          <a href="#" data-target="mobile-demo" class="sidenav-trigger">
-            <i class="material-icons">menu</i>
-          </a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -76,15 +68,6 @@
         </div>
       </nav>
 
-      <ul class="sidenav" id="mobile-demo">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About Us</a></li>
-        <li>
-          <a href="https://github.com/Deejerz88/Native-Solutions">
-            GitHub Repository
-          </a>
-        </li>
-      </ul>
 
       <div class="alert alert-warning center">
         <b style="color: rgb(255, 255, 255) !important">Note</b>
@@ -119,8 +102,7 @@
     </div>
 
       </div>
-      <section id="search-results" class="row">
-          <div id="card-container" class="col s12 m6"></div>
+      <section id="search-results">
       </section>
     </main>
 
