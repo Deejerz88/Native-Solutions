@@ -144,7 +144,10 @@ article {
 }
 
 div {
-    
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    padding: 10px;
 }
 
 /* Add a white background color to the Footer */
