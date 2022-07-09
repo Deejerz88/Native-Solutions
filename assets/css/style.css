@@ -136,6 +136,17 @@ html {
     padding: 0 10px;
 }
 
+article {
+    justify-content: center;
+    font-size: 30px;
+    width: 100%;
+    display: flex;
+}
+
+div {
+    
+}
+
 /* Add a white background color to the Footer */
 .footer {
     background-color: rgb(255, 255, 255);
