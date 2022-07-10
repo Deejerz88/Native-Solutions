@@ -28,12 +28,11 @@ const getState = (location) => {
   fetch(url).then((res) => {
     if (res.ok)
       res.json().then((data) => {
-        console.log(data);
+        // console.log(data);
         const address = data.results[0].address_components;
         let state;
         let country;
         address.forEach((component, i) => {
-          console.log(component);
           if (component.types[0] === "administrative_area_level_1")
             state = component.short_name;
           else if (component.types[0] === "country")
@@ -43,7 +42,6 @@ const getState = (location) => {
         // const state = data.results[0].address_components[2].short_name;
         // const country = data.results[0].address_components[3].short_name
         const location = { state: state, country: country };
-        console.log(location);
         getData(location);
         return location;
       });
@@ -93,7 +91,7 @@ const getData = (location) => {
   //     },
   //   ];
 
-  console.log({ searchCriteria });
+  // console.log({ searchCriteria });
   fetch(url, {
     method: "POST",
     mode: "cors",
@@ -104,7 +102,6 @@ const getData = (location) => {
   }).then((res) => {
     if (res.ok)
       res.json().then((data) => {
-        console.log(data);
         data.results.forEach((organism) => {
           getOrganismInfo(organism.uniqueId);
         });
@@ -121,7 +118,7 @@ const getOrganismInfo = (id) => {
   fetch(url).then((res) => {
     if (res.ok)
       res.json().then((data) => {
-        console.log(data);
+        console.log(data.primaryCommonName, data);
         createCard(data);
       });
   });
@@ -148,7 +145,7 @@ const createCard = (data) => {
   const link = $("<a>");
 
   cardContainer.addClass("row");
-  col.addClass("col s12 m6");
+  col.addClass("col s6 m6 l6");
   card.addClass("card");
   imgContainer.addClass("card-image");
   title.addClass("card-title");
@@ -159,10 +156,7 @@ const createCard = (data) => {
   action.addClass("card-action");
 
   // getImage()
-  let rnd1 = (Math.random() * 100) << 0;
-  let rnd2 = (Math.random() * 100) << 0;
-  img.attr({ src: `http://placekitten.com/${rnd1}/${rnd2}` });
-  img.css({ width: 100, height: 100 });
+  img.attr({ src: `https://via.placeholder.com/100` }).css({ width: 100 });
 
   title.text(commonName);
   title.css({ color: "black" });
@@ -175,19 +169,7 @@ const createCard = (data) => {
   icon.addClass("material-icons").text("info");
   fab.append(icon);
 
-  let descText = data.speciesCharacteristics.generalDescription;
-  descText = !!descText
-    ? descText
-    : data.speciesCharacteristics.habitatComments;
-  let descArray = descText.split(";");
-  console.log({ descArray });
-  let descList = $("<ul>").addClass("descList");
-  descArray.forEach((des) => {
-    descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
-  });
-  console.log({ descList });
-  descText = $("<ul>").append(descList.clone()).html();
-  console.log({ descText });
+  const descText = createBody(data);
 
   content.html(`<b>Scientific Name:</b> ${sciName} <p>${descText}`);
   content.css({ color: "black" });
@@ -200,8 +182,6 @@ const createCard = (data) => {
   action.append(link);
 
   fab.on("click", (e) => {
-    console.log(e);
-    console.log(data);
     populateSidenav(data);
   });
 
@@ -214,7 +194,6 @@ const createCard = (data) => {
 const getImage = (species, kingdom) => {
   let imgUrl = "https://apps.des.qld.gov.au/species-search/?f=json";
   let taxIdURL = `https://apps.des.qld.gov.au/species/?op=speciessearch?species=${species}&kingdom=${kingdom}`;
-  console.log(taxIdURL);
   fetch(taxIdURL).then((res) => {
     if (res.ok)
       res.json().then((data) => {
@@ -227,38 +206,49 @@ const populateSidenav = (data) => {
   sideNav.empty();
   const collapsible = $("<ul>");
   const title = $("<h2>");
+  const img = $("<img>");
   const desc = $("<p>");
   // const background = $('<div>')
   // const bgImg = $('<img>')
 
-  const general = data.speciesGlobal;
-  title.text(data.primaryCommonName);
-  
+  const species = data.speciesGlobal;
+  const sc = data.speciesCharacteristics;
+  const ac = data.animalCharacteristics;
+  const pc = data.plantCharacteristics;
+  const rank = data.rankInfo;
 
+  title.text(data.primaryCommonName);
+  img
+    .attr({ src: `https://via.placeholder.com/200` })
+    .css({ width: 200, margin: 20 });
   sideNav.append(
     title,
+    img,
     $("<li>").addClass("no padding").append(collapsible)
   );
   const categories = [
     "General Info",
-    "Species Characteristics",
-    "Animal Characteristics",
+    "Classification",
+    "Habitat",
+    "Food Habits",
+    "Reproduction",
+    "Phenology",
+    "Migration",
+    "Population & Endangerment",
     "Plant Characteristics",
-    "Endangerment",
   ];
   collapsible.addClass("collapsible popout");
 
   categories.forEach((category) => {
-    //
     //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
     //
     //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
     //
-    //endangerment: grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds }
+    //endangerment: grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds }, elementManagement { stewardshipOverview, biologicalResearchNeeds}
     //
-    //elementManagement { stewardshipOverview, biologicalResearchNeeds}
     //
-    //General Info: nameCategory, primaryCommonName, formattedScientificName, speciesGlobal {family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy} references, elementNationals, elementSubnationals
+    //
+    //General Info: nameCategory, primaryCommonName, formattedScientificName, speciesGlobal {family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy} references,
     const content = $("<li>");
     const header = $("<a>");
     const body = $("<div>");
@@ -270,7 +260,16 @@ const populateSidenav = (data) => {
 
     header.html(`<b>${category}</b>`);
     // let bodyHtml = $('<span>');
+
+    //General Info
     if (category === "General Info") {
+      const descText = createBody(data);
+      desc.html(descText);
+      bodyText.append(desc);
+    }
+
+    //Classification
+    else if (category === "Classification") {
       taxLevels = [
         "Kingdom",
         "Phylum",
@@ -281,34 +280,168 @@ const populateSidenav = (data) => {
         "Species",
       ];
       taxLevels.forEach((level) => {
-        let taxLevel = general[level.toLowerCase()];
-        taxLevel = !!taxLevel ? taxLevel : general["tax" + level.toLowerCase()];
+        let taxLevel = species[level.toLowerCase()];
+        taxLevel = !!taxLevel ? taxLevel : species["tax" + level.toLowerCase()];
         taxLevel = level === "Species" ? data.scientificName : taxLevel;
-        bodyText.append(`<p><b>${level}:</b> ${taxLevel}`);
-      });
-      let descText = data.speciesCharacteristics.generalDescription;
-      descText = !!descText
-        ? descText
-        : data.speciesCharacteristics.habitatComments;
-      let descArray = descText.split(";");
-      console.log({ descArray });
-      let descList = $("<ul>").addClass("descList");
-      descArray.forEach((des) => {
-        descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
-      });
-      console.log({ descList });
-      descText = $("<ul>").append(descList.clone()).html();
-      console.log({ descText });
-      desc.html(descText);
-      bodyText.append(
-        `<p><b>Name Category:</b> ${data.nameCategory.nameCategoryDescEn}</p>`,desc
-      );
-    } else if (category === "Species Characteristics") {
-      //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
 
-      let char = ["habitatComments", "reproductionComments"];
+        bodyText.append(`<p><b>${level}:</b> ${taxLevel}<br>
+        <p><b>Informal Taxonomy:</b> ${data.nameCategory.nameCategoryDescEn}</p>`);
+      });
+    } else if (category === "Habitat") {
+      //elementNationals, elementSubnationals
+      // let nationals = {};
+      bodyText.append($('<table>').attr({ 'data-sortable': undefined }).addClass('sortable-theme-slick'))
+      
+      const countries = data.elementNationals;
+      countries.forEach((country) => {
+        const countryName = country.nation.nameEn;
+        console.log({ country });
+        
+
+        // nationals[countryName] = {};
+        // console.log({ nationals });
+        const subNationals = country.elementSubnationals;
+        subNationals.forEach((subNat) => {
+          const subnation = subNat.subnation.nameEn;
+          const exotic = subNat.speciesSubnational.exotic;
+          const hybrid = subNat.speciesSubnational.hybrid;
+          const native = subNat.speciesSubnational.native;
+          tableData.push({ countryName, subnation, exotic, hybrid, native });
+        });
+        console.log({ tableData });
+        // subNationals.forEach((subNat) => {
+        //   console.log({subNat})
+        //   const info = {
+        //     subnation: subNat.subnation.nameEn,
+        //     exotic: subNat.speciesSubnational.exotic,
+        //     hybrid: subNat.speciesSubnational.hybrid,
+        //     native: subNat.speciesSubnational.native,
+        //   };
+        //   nationals[countryName][info.subnation] = {
+        //     exotic: info.exotic,
+        //     hybrid: info.hybrid,
+        //     native: info.native,
+        //   };
+        // });
+      });
+      // console.log({ nationals });
+      
+
+      let habitat = "";
+      try {
+        const majorHabitat = ac.majorHabitat.majorHabitatDescEn;
+        habitat = !!majorHabitat
+          ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
+          : habitat;
+      } catch (err) {}
     }
 
+    //Food Habits
+    else if (category === "Food Habits") {
+      const foodArr = ac.animalFoodHabits;
+      let foodDesc = ac.foodHabitsComments;
+      const ul = $("<ul>");
+
+      foodArr.forEach((habit) => {
+        const adult = habit.foodHabits.adult;
+        const immature = habit.foodHabits.immature;
+        const habitList = $("<li>").text(habit.foodHabits.foodHabitsDescEn);
+        if (!!adult)
+          habitList.append($("<ul><li>").html(`<b>Adult:</b> ${adult}`));
+        if (!!immature)
+          habitList.append($("<li>").html(`<b>Immature:</b> ${immature}`));
+        ul.append(habitList);
+      });
+      bodyText.append(ul, foodDesc);
+    }
+
+    //Reproduction
+    else if (category === "Reproduction") {
+      bodyText.html(
+        `<b>Colonial Breeder:</b> ${ac.colonialBreeder}<br>${sc.reproductionComments}`
+      );
+    }
+
+    //Phenology
+    else if (category === "Phenology") {
+      //animalPhenologies, animalPhenologyComments,
+      let phenoDesc = ac.animalPhenologyComments;
+      const phenoArr = ac.animalPhenologies;
+      const ul = $("<ul>");
+      phenoArr.forEach((pheno) => {
+        const adult = pheno.adult;
+        const immature = pheno.immature;
+        const phenoList = $("<li>").text(
+          pheno.animalPhenology.animalPhenologyDescEn
+        );
+        if (!!adult)
+          phenoList.append($("<ul><li>").html(`<b>Adult:</b> ${adult}`));
+        if (!!immature)
+          phenoList.append($("<li>").html(`<b>Immature:</b> ${immature}`));
+        ul.append(phenoList);
+      });
+      bodyText.append(ul, phenoDesc);
+    }
+
+    //Migration
+    else if (category === "Migration") {
+      const migArr = [
+        "nonMigrant",
+        "localMigrant",
+        "longDistanceMigrant",
+        "mobilityMigrationComments",
+      ];
+      migArr.forEach((mig) => {
+        bodyText.append(
+          ac[mig] !== null ? `<b>${mig}:</b> ${ac[mig]}<br>` : ""
+        );
+      });
+    }
+
+    //Endangerment
+    else if (category === "Population & Endangerment") {
+      const popSize = rank.popSize.popSizeDescEn;
+      const popDesc = rank.popSizeComments;
+      const range = rank.rangeExtent.rangeExtentDescEn;
+      const rangeDesc = rank.rangeExtentComments;
+
+      const grank = data.grank;
+      const grankDesc = data.grankReasons;
+      const shortTrend = rank.shortTermTrend.shortTermTrendDescEn;
+      const shortDesc = rank.shortTermTrendComments;
+      const longTrend = rank.longTermTrend.longTermTrendDescEn;
+      const longDesc = rank.longTermTrendComments;
+
+      const threat = rank.threatImpactAssigned.threatImpactAssignedDescEn;
+      const threatDesc = rank.threatImpactComments;
+
+      const popNeeds = rank.inventoryNeeds;
+      const protectionNeeds = rank.protectionNeeds;
+
+      const stewardship = data.elementManagement.stewardshipOverview;
+      const research = data.elementManagement.bioligicalResearchNeeds;
+
+      const pop = $("<p>");
+      if (!!popSize) {
+        pop.append(
+          `<b>Population:</b> ${popSize}<br>${popDesc}<br><br><b>Range:</b> ${range}<br>${rangeDesc}`
+        );
+      }
+      pop.append(`<b>Global Status:</b> ${grank}<br>${grankDesc}`);
+      if (!!shortTrend)
+        pop.append(
+          `<br> <br><b>Short-Term Trend:</b> ${shortTrend}<br>${shortDesc}`
+        );
+      if (!!longTrend)
+        pop.append(
+          `<br><br><b>Long-Term Trend:</b> ${longTrend}<br>${longDesc}<br><br>`
+        );
+      if (!!threat) pop.append(`<b>Threat:</b> ${threat}<br>${threatDesc}`);
+      if (!!popNeeds) pop.append(`<b>Population Needs:</b> ${popNeeds}`);
+      if (!!protectionNeeds)
+        pop.append(`<b>Protection Needs:</b> ${protectionNeeds}`);
+      bodyText.append(pop);
+    }
     // bodyText.html(bodyHtml);
     content.append(
       header,
@@ -318,7 +451,34 @@ const populateSidenav = (data) => {
   });
   $(".collapsible").collapsible();
 };
-
+const createBody = (data) => {
+  const ac = data.animalCharacteristics;
+  const sc = data.speciesCharacteristics;
+  let lww = "";
+  if (!!ac.length) lww += `<b>Length:</b> ${ac.length}mm`;
+  if (!!ac.width) lww += !lww ? "" : " | " + `<b>Width:</b> ${ac.width}mm`;
+  if (!!ac.weight) lww += !lww ? "" : " | " + `<b>Weigth:</b> ${ac.weight}<br>`;
+  let habitat = "";
+  try {
+    const majorHabitat = ac.majorHabitat.majorHabitatDescEn;
+    habitat = !!majorHabitat
+      ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
+      : habitat;
+  } catch (err) {}
+  let descText = sc.generalDescription;
+  descText = !!descText ? descText : sc.habitatComments;
+  let descArray;
+  try {
+    descArray = descText.split(";");
+    let descList = $("<ul>").addClass("descList");
+    descArray.forEach((des) => {
+      descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+    });
+    descText = $("<ul>").append(descList.clone()).html();
+    descText = lww + habitat + descText;
+  } catch (err) {}
+  return descText;
+};
 //sideNav
 const sideNav = $("<ul>");
 $("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));

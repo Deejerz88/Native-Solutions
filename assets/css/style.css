@@ -168,14 +168,9 @@ html {
 }
 
 .sidenav p{
-    padding: 0 50px;
-
+    padding: 10px 20px;
 }
 
-.descList li{
-    line-height: 20px
-
-}
 
 .collapsible.popout > li.active{
   margin: 24px 10px;
