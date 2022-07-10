@@ -233,24 +233,10 @@ const populateSidenav = (data) => {
 
   const general = data.speciesGlobal;
   title.text(data.primaryCommonName);
-  let descText = data.speciesCharacteristics.generalDescription;
-  descText = !!descText
-    ? descText
-    : data.speciesCharacteristics.habitatComments;
-  let descArray = descText.split(";");
-  console.log({ descArray });
-  let descList = $("<ul>").addClass("descList");
-  descArray.forEach((des) => {
-    descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
-  });
-  console.log({ descList });
-  descText = $("<ul>").append(descList.clone()).html();
-  console.log({ descText });
-  desc.html(descText);
+  
 
   sideNav.append(
     title,
-    desc,
     $("<li>").addClass("no padding").append(collapsible)
   );
   const categories = [
@@ -300,8 +286,22 @@ const populateSidenav = (data) => {
         taxLevel = level === "Species" ? data.scientificName : taxLevel;
         bodyText.append(`<p><b>${level}:</b> ${taxLevel}`);
       });
+      let descText = data.speciesCharacteristics.generalDescription;
+      descText = !!descText
+        ? descText
+        : data.speciesCharacteristics.habitatComments;
+      let descArray = descText.split(";");
+      console.log({ descArray });
+      let descList = $("<ul>").addClass("descList");
+      descArray.forEach((des) => {
+        descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+      });
+      console.log({ descList });
+      descText = $("<ul>").append(descList.clone()).html();
+      console.log({ descText });
+      desc.html(descText);
       bodyText.append(
-        `<p><b>Name Category:</b> ${data.nameCategory.nameCategoryDescEn}</p>`
+        `<p><b>Name Category:</b> ${data.nameCategory.nameCategoryDescEn}</p>`,desc
       );
     } else if (category === "Species Characteristics") {
       //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
