@@ -171,12 +171,15 @@ html {
     padding: 10px 20px;
 }
 
-
 .collapsible.popout > li.active{
   margin: 24px 10px;
-  padding: 5px
+  padding: 5px;
 }
 
 .collapsible.popout p{
-    margin: 15px
+    margin: 15px;
+}
+
+.collapsible-body li{
+    line-height: 24px
 }

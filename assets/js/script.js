@@ -6,6 +6,7 @@ const advanced = $("#advanced");
 const endangermentEl = $("#endangerment");
 const locationEl = $("#location");
 
+searchInput.val("Michigan");
 //Get API Keys from AWS Lambda
 const apiURL =
   "https://zx3eyuody3fc25me63au7ukbki0jqehi.lambda-url.us-east-2.on.aws/";
@@ -263,8 +264,7 @@ const populateSidenav = (data) => {
 
     //General Info
     if (category === "General Info") {
-      const descText = createBody(data);
-      desc.html(descText);
+      desc.html(createBody(data));
       bodyText.append(desc);
     }
 
@@ -279,36 +279,83 @@ const populateSidenav = (data) => {
         "Genus",
         "Species",
       ];
+      const ul = $("<ul>");
       taxLevels.forEach((level) => {
         let taxLevel = species[level.toLowerCase()];
         taxLevel = !!taxLevel ? taxLevel : species["tax" + level.toLowerCase()];
         taxLevel = level === "Species" ? data.scientificName : taxLevel;
-
-        bodyText.append(`<p><b>${level}:</b> ${taxLevel}<br>
-        <p><b>Informal Taxonomy:</b> ${data.nameCategory.nameCategoryDescEn}</p>`);
+        ul.append($("<li>").html(`<b>${level}:</b> ${taxLevel}`));
       });
-    } else if (category === "Habitat") {
+      ul.append(
+        $("<li>").html(
+          `<b>Informal Taxonomy:</b> ${data.nameCategory.nameCategoryDescEn}`
+        )
+      );
+      bodyText.append(ul);
+    }
+
+    //Habitat
+    else if (category === "Habitat") {
       //elementNationals, elementSubnationals
       // let nationals = {};
-      bodyText.append($('<table>').attr({ 'data-sortable': undefined }).addClass('sortable-theme-slick'))
-      
+
+      let natSearch = $("<input>").attr({
+        type: "text",
+        id: "natSearch",
+        onkeyup: "searchNats()",
+        placeholder: "Search...",
+      });
+
+      let table = $("<table>")
+        .attr({ id: "national-table" })
+        .addClass("striped");
+      const thead = $("<thead>").append($("<tr>"));
+      const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
+      headers.forEach((header) => thead.append(`<th>${header}</th>`));
+      const tbody = $("<tbody>");
+
       const countries = data.elementNationals;
       countries.forEach((country) => {
         const countryName = country.nation.nameEn;
-        console.log({ country });
-        
-
-        // nationals[countryName] = {};
-        // console.log({ nationals });
         const subNationals = country.elementSubnationals;
+
         subNationals.forEach((subNat) => {
+          const tr = $("<tr>").addClass("natRow");
           const subnation = subNat.subnation.nameEn;
           const exotic = subNat.speciesSubnational.exotic;
           const hybrid = subNat.speciesSubnational.hybrid;
           const native = subNat.speciesSubnational.native;
-          tableData.push({ countryName, subnation, exotic, hybrid, native });
+
+          const dataSet = [countryName, subnation, native, exotic, hybrid];
+          dataSet.forEach((data) => {
+            const td = $("<td>");
+            if (data !== true && data !== false) td.addClass("tableFilter");
+            switch (data) {
+              case true:
+                data =
+                  '<i style="color:green" class="material-icons">check_circle</i>';
+                break;
+              case false:
+                data = '<i style="color:red" class="material-icons">cancel</i>';
+                break;
+            }
+
+            tr.append(td.html(data));
+          });
+          tbody.append(tr);
         });
-        console.log({ tableData });
+
+        // nationals[countryName] = {};
+        // console.log({ nationals });
+        // const subNationals = country.elementSubnationals;
+        // subNationals.forEach((subNat) => {
+        //   const subnation = subNat.subnation.nameEn;
+        //   const exotic = subNat.speciesSubnational.exotic;
+        //   const hybrid = subNat.speciesSubnational.hybrid;
+        //   const native = subNat.speciesSubnational.native;
+        //   tableData.push({ countryName, subnation, exotic, hybrid, native });
+        // });
+        // console.log({ tableData });
         // subNationals.forEach((subNat) => {
         //   console.log({subNat})
         //   const info = {
@@ -325,7 +372,7 @@ const populateSidenav = (data) => {
         // });
       });
       // console.log({ nationals });
-      
+      table.append(thead, tbody);
 
       let habitat = "";
       try {
@@ -334,6 +381,7 @@ const populateSidenav = (data) => {
           ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
           : habitat;
       } catch (err) {}
+      bodyText.append(natSearch, table, habitat);
     }
 
     //Food Habits
@@ -398,28 +446,42 @@ const populateSidenav = (data) => {
       });
     }
 
-    //Endangerment
+    //Population & Endangerment
     else if (category === "Population & Endangerment") {
-      const popSize = rank.popSize.popSizeDescEn;
-      const popDesc = rank.popSizeComments;
-      const range = rank.rangeExtent.rangeExtentDescEn;
-      const rangeDesc = rank.rangeExtentComments;
+      let popSize,
+        popDesc,
+        range,
+        rangeDesc,
+        grank,
+        grankDesc,
+        shortTrend,
+        shortDesc,
+        longTrend,
+        longDesc,
+        threat,
+        threatDesc,
+        popNeeds,
+        protectionNeeds;
+      try {
+        longTrend, longDesc, threat, threatDesc, popNeeds, protectionNeeds;
+        popSize = rank.popSize.popSizeDescEn;
+        popDesc = rank.popSizeComments;
+        range = rank.rangeExtent.rangeExtentDescEn;
+        rangeDesc = rank.rangeExtentComments;
 
-      const grank = data.grank;
-      const grankDesc = data.grankReasons;
-      const shortTrend = rank.shortTermTrend.shortTermTrendDescEn;
-      const shortDesc = rank.shortTermTrendComments;
-      const longTrend = rank.longTermTrend.longTermTrendDescEn;
-      const longDesc = rank.longTermTrendComments;
+        grank = data.grank;
+        grankDesc = data.grankReasons;
+        shortTrend = rank.shortTermTrend.shortTermTrendDescEn;
+        shortDesc = rank.shortTermTrendComments;
+        longTrend = rank.longTermTrend.longTermTrendDescEn;
+        longDesc = rank.longTermTrendComments;
 
-      const threat = rank.threatImpactAssigned.threatImpactAssignedDescEn;
-      const threatDesc = rank.threatImpactComments;
+        threat = rank.threatImpactAssigned.threatImpactAssignedDescEn;
+        threatDesc = rank.threatImpactComments;
 
-      const popNeeds = rank.inventoryNeeds;
-      const protectionNeeds = rank.protectionNeeds;
-
-      const stewardship = data.elementManagement.stewardshipOverview;
-      const research = data.elementManagement.bioligicalResearchNeeds;
+        popNeeds = rank.inventoryNeeds;
+        protectionNeeds = rank.protectionNeeds;
+      } catch (err) {}
 
       const pop = $("<p>");
       if (!!popSize) {
@@ -451,6 +513,7 @@ const populateSidenav = (data) => {
   });
   $(".collapsible").collapsible();
 };
+
 const createBody = (data) => {
   const ac = data.animalCharacteristics;
   const sc = data.speciesCharacteristics;
@@ -479,6 +542,30 @@ const createBody = (data) => {
   } catch (err) {}
   return descText;
 };
+
+const searchNats = () => {
+  // Declare variables
+  let input, filter, tr, td, txtValue;
+  input = $("#natSearch");
+  filter = input.val().toUpperCase();
+  tr = $(".natRow");
+  for (let i = 0; i < tr.length; i++) {
+    const row = $(tr[i]);
+    td = $(row.children(".tableFilter"));
+    for (let j = 0; j < td.length; j++) {
+      let found = 0;
+      if (td[j]) {
+        txtValue = $(td[j]).val() || $(td[j]).text();
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          found++;
+        }
+        if (!found) row.hide();
+        else row.show();
+      }
+    }
+  }
+};
+
 //sideNav
 const sideNav = $("<ul>");
 $("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));
