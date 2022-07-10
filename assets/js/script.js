@@ -175,9 +175,21 @@ const createCard = (data) => {
   icon.addClass("material-icons").text("info");
   fab.append(icon);
 
-  content.html(
-    `<b>Scientific Name:</b> ${sciName} <p>${data.animalCharacteristics.mobilityMigrationComments}`
-  );
+  let descText = data.speciesCharacteristics.generalDescription;
+  descText = !!descText
+    ? descText
+    : data.speciesCharacteristics.habitatComments;
+  let descArray = descText.split(";");
+  console.log({ descArray });
+  let descList = $("<ul>").addClass("descList");
+  descArray.forEach((des) => {
+    descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+  });
+  console.log({ descList });
+  descText = $("<ul>").append(descList.clone()).html();
+  console.log({ descText });
+
+  content.html(`<b>Scientific Name:</b> ${sciName} <p>${descText}`);
   content.css({ color: "black" });
 
   link
@@ -211,22 +223,35 @@ const getImage = (species, kingdom) => {
   });
 };
 
-//sideNav
-
-
 const populateSidenav = (data) => {
-  sideNav.empty()
+  sideNav.empty();
   const collapsible = $("<ul>");
   const title = $("<h2>");
+  const desc = $("<p>");
   // const background = $('<div>')
   // const bgImg = $('<img>')
 
-  const general = data.speciesGlobal
+  const general = data.speciesGlobal;
   title.text(data.primaryCommonName);
-  
+  let descText = data.speciesCharacteristics.generalDescription;
+  descText = !!descText
+    ? descText
+    : data.speciesCharacteristics.habitatComments;
+  let descArray = descText.split(";");
+  console.log({ descArray });
+  let descList = $("<ul>").addClass("descList");
+  descArray.forEach((des) => {
+    descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+  });
+  console.log({ descList });
+  descText = $("<ul>").append(descList.clone()).html();
+  console.log({ descText });
+  desc.html(descText);
+
   sideNav.append(
     title,
-    $("<br><li>").addClass("no padding").append(collapsible)
+    desc,
+    $("<li>").addClass("no padding").append(collapsible)
   );
   const categories = [
     "General Info",
@@ -238,7 +263,6 @@ const populateSidenav = (data) => {
   collapsible.addClass("collapsible popout");
 
   categories.forEach((category) => {
-    //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
     //
     //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
     //
@@ -255,34 +279,50 @@ const populateSidenav = (data) => {
     const info = $("<ul>");
     const bodyText = $("<span>");
 
-    // const icon = $("<i>");
-
     header.attr({ href: "#!" }).addClass("collapsible-header");
-    // icon.addClass("material-icons");
     body.addClass("collapsible-body");
 
-    // icon.text("info");
     header.html(`<b>${category}</b>`);
-    if (category === "General Info") bodyText.html(`<p><b>Kingdom: </b>${general.kingdom}</p> `);
+    // let bodyHtml = $('<span>');
+    if (category === "General Info") {
+      taxLevels = [
+        "Kingdom",
+        "Phylum",
+        "Class",
+        "Order",
+        "Family",
+        "Genus",
+        "Species",
+      ];
+      taxLevels.forEach((level) => {
+        let taxLevel = general[level.toLowerCase()];
+        taxLevel = !!taxLevel ? taxLevel : general["tax" + level.toLowerCase()];
+        taxLevel = level === "Species" ? data.scientificName : taxLevel;
+        bodyText.append(`<p><b>${level}:</b> ${taxLevel}`);
+      });
+      bodyText.append(
+        `<p><b>Name Category:</b> ${data.nameCategory.nameCategoryDescEn}</p>`
+      );
+    } else if (category === "Species Characteristics") {
+      //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
 
+      let char = ["habitatComments", "reproductionComments"];
+    }
+
+    // bodyText.html(bodyHtml);
     content.append(
       header,
       body.append(info.append($("<li>").append(bodyText)))
     );
-    // , body.append(ul).append($("<li>").append(bodyText)));
     collapsible.append(content);
-    // console.log(sideNav.children('a'))
   });
-   $(".collapsible").collapsible();
+  $(".collapsible").collapsible();
 };
 
+//sideNav
 const sideNav = $("<ul>");
 $("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));
 
 $(document).ready(function () {
   $(".sidenav").sidenav();
-});
-
-$(document).ready(function () {
- 
 });
