@@ -128,17 +128,6 @@ const getOrganismInfo = (id) => {
 };
 
 const createCard = (data) => {
-  //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
-  //
-  //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
-  //
-  //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
-  //
-  //endangerment(grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds })
-  //
-  //elementManagement { stewardshipOverview, biologicalResearchNeeds}
-  //
-  //nameCategory, primaryCommonName, formattedScientificName, family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy, references, elementNationals, elementSubnationals
   //
 
   const sciName = data.scientificName;
@@ -186,10 +175,21 @@ const createCard = (data) => {
   icon.addClass("material-icons").text("info");
   fab.append(icon);
 
-  // animalCharacteristics.mobilityMigrationComments;
-  content.html(
-    `<b>Scientific Name:</b> ${sciName} <p>${data.animalCharacteristics.mobilityMigrationComments}`
-  );
+  let descText = data.speciesCharacteristics.generalDescription;
+  descText = !!descText
+    ? descText
+    : data.speciesCharacteristics.habitatComments;
+  let descArray = descText.split(";");
+  console.log({ descArray });
+  let descList = $("<ul>").addClass("descList");
+  descArray.forEach((des) => {
+    descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+  });
+  console.log({ descList });
+  descText = $("<ul>").append(descList.clone()).html();
+  console.log({ descText });
+
+  content.html(`<b>Scientific Name:</b> ${sciName} <p>${descText}`);
   content.css({ color: "black" });
 
   link
@@ -199,27 +199,16 @@ const createCard = (data) => {
     .text("Add to Favorites");
   action.append(link);
 
+  fab.on("click", (e) => {
+    console.log(e);
+    console.log(data);
+    populateSidenav(data);
+  });
+
   imgContainer.append(img, title, fab);
   card.append(imgContainer, content, action);
   cardContainer.append(card);
   searchResults.append(card);
-
-  // card.on('click', () => { openSidenav(data) })
-
-  // https://materializecss.com/cards.html
-  //
-  //     <div class="card horizontal">
-  //       <div class="card-image">
-  //         <img src="images/sample-1.jpg">
-  //         <span class="card-title">Card Title</span>
-  //         <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-  //       </div>
-  //       <div class="card-content">
-  //         <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-  //       </div>
-  //     </div>
-  //   </div>
-  // </div>
 };
 
 const getImage = (species, kingdom) => {
@@ -234,59 +223,105 @@ const getImage = (species, kingdom) => {
   });
 };
 
-// const openSidenav = (data) => {
-//   // const sideNav = $('<nav>')
+const populateSidenav = (data) => {
+  sideNav.empty();
+  const collapsible = $("<ul>");
+  const title = $("<h2>");
+  const desc = $("<p>");
+  // const background = $('<div>')
+  // const bgImg = $('<img>')
 
-//   // $("body").append(sideNav);
+  const general = data.speciesGlobal;
+  title.text(data.primaryCommonName);
+  let descText = data.speciesCharacteristics.generalDescription;
+  descText = !!descText
+    ? descText
+    : data.speciesCharacteristics.habitatComments;
+  let descArray = descText.split(";");
+  console.log({ descArray });
+  let descList = $("<ul>").addClass("descList");
+  descArray.forEach((des) => {
+    descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+  });
+  console.log({ descList });
+  descText = $("<ul>").append(descList.clone()).html();
+  console.log({ descText });
+  desc.html(descText);
 
-// }
+  sideNav.append(
+    title,
+    desc,
+    $("<li>").addClass("no padding").append(collapsible)
+  );
+  const categories = [
+    "General Info",
+    "Species Characteristics",
+    "Animal Characteristics",
+    "Plant Characteristics",
+    "Endangerment",
+  ];
+  collapsible.addClass("collapsible popout");
+
+  categories.forEach((category) => {
+    //
+    //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
+    //
+    //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
+    //
+    //endangerment: grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds }
+    //
+    //elementManagement { stewardshipOverview, biologicalResearchNeeds}
+    //
+    //General Info: nameCategory, primaryCommonName, formattedScientificName, speciesGlobal {family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy} references, elementNationals, elementSubnationals
+    const content = $("<li>");
+    const header = $("<a>");
+    const body = $("<div>");
+    const info = $("<ul>");
+    const bodyText = $("<span>");
+
+    header.attr({ href: "#!" }).addClass("collapsible-header");
+    body.addClass("collapsible-body");
+
+    header.html(`<b>${category}</b>`);
+    // let bodyHtml = $('<span>');
+    if (category === "General Info") {
+      taxLevels = [
+        "Kingdom",
+        "Phylum",
+        "Class",
+        "Order",
+        "Family",
+        "Genus",
+        "Species",
+      ];
+      taxLevels.forEach((level) => {
+        let taxLevel = general[level.toLowerCase()];
+        taxLevel = !!taxLevel ? taxLevel : general["tax" + level.toLowerCase()];
+        taxLevel = level === "Species" ? data.scientificName : taxLevel;
+        bodyText.append(`<p><b>${level}:</b> ${taxLevel}`);
+      });
+      bodyText.append(
+        `<p><b>Name Category:</b> ${data.nameCategory.nameCategoryDescEn}</p>`
+      );
+    } else if (category === "Species Characteristics") {
+      //speciesCharacteristics {habitatComments, reproduction comments, sepciesGlobal{ endangerment(cosewic, cosewicRComments, saraStatus), ebarKbaGroup(general species ?)
+
+      let char = ["habitatComments", "reproductionComments"];
+    }
+
+    // bodyText.html(bodyHtml);
+    content.append(
+      header,
+      body.append(info.append($("<li>").append(bodyText)))
+    );
+    collapsible.append(content);
+  });
+  $(".collapsible").collapsible();
+};
 
 //sideNav
 const sideNav = $("<ul>");
-const collapsible = $("<ul>");
-const title = $("<h2>");
-// const background = $('<div>')
-// const bgImg = $('<img>')
-
-// sideNav.text(data.primaryCommonName)
-sideNav.addClass("sidenav").attr({ id: "slide-out" });
-sideNav.append($("<li>").addClass('no padding').append(collapsible));
-const categories = [
-  "General Info",
-  "Species Characteristics",
-  "Animal Characteristics",
-  "Plant Characteristics",
-  "Endangerment",
-];
-collapsible.addClass("collapsible collapsible-accordian");
-
-categories.forEach((category) => {
-  const content = $("<li>");
-  const header = $("<a>");
-  const body = $("<div>");
-  const info = $("<ul>");
-  const bodyText = $("<span>");
-  
-  // const icon = $("<i>");
-
-  
-  header.attr({ href: '#!'}).addClass("collapsible-header");
-  // icon.addClass("material-icons");
-  body.addClass("collapsible-body");
-
-  // icon.text("info");
-  header.text(category);
-  bodyText.text(
-    "Quis eu velit nostrud labore labore do quis aliquip nisi minim nisi officia anim pariatur. Cillum eiusmod est adipisicing laborum quis proident ullamco ut mollit culpa. Laborum occaecat ipsum laboris culpa culpa nisi. Aute magna deserunt sint consequat sunt culpa ex incididunt occaecat. Aliqua exercitation occaecat ad tempor id voluptate exercitation exercitation ea laborum cillum deserunt."
-  );
-  
-  content.append(header, info.append($("<li>").append(bodyText)));
-    // , body.append(ul).append($("<li>").append(bodyText)));
-  collapsible.append(content);
-  // console.log(sideNav.children('a'))
-});
-
-$("body").append(sideNav);
+$("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));
 
 $(document).ready(function () {
   $(".sidenav").sidenav();

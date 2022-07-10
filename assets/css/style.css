@@ -1,4 +1,4 @@
-@charset "UTF-8";
+/* @charset "UTF-8";
 html,
 body,
 div,
@@ -84,7 +84,7 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
-}
+} */
 
 *{
     margin: 0;
@@ -158,5 +158,30 @@ html {
 }
 
 .sidenav{
-    width: 800px
+    width: 800px;
+}
+
+.sidenav h2{
+    font-weight: bold;
+    font-size: 24pt;
+    padding: 0 10px
+}
+
+.sidenav p{
+    padding: 0 50px;
+
+}
+
+.descList li{
+    line-height: 20px
+
+}
+
+.collapsible.popout > li.active{
+  margin: 24px 10px;
+  padding: 5px
+}
+
+.collapsible.popout p{
+    margin: 15px
 }
