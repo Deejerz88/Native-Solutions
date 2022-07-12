@@ -79,7 +79,7 @@ const getData = (location) => {
   //     },
   //   ];
 
-  // if (!!taxSearch && !!advanced.val())
+  // if (!!taxSearch && !advanced.val())
   //   searchCriteria.speciesTaxonomyCriteria = [
   //     { paramType: "informalTaxonomy", informalTaxonomy: taxonomyEl.val() },
   //   ];
@@ -318,7 +318,7 @@ const populateSidenav = (data) => {
 
       let table = createTable(1, perPage, countries);
 
-      console.log("adding pagination");
+      // console.log("adding pagination");
       let pagination = $("<div>").addClass("pagination");
       pagination.append(
         $("<a>").attr({ href: "#!", id:'firstPage', onclick: "changePage(1)" }).html("&laquo;")
@@ -327,13 +327,13 @@ const populateSidenav = (data) => {
         let page = n+1
         let a = $("<a>");
         if (n == 0) a.addClass("active");
-        a.attr({ href: "#!",id:`page${page}`, onclick: `changePage(${page})` }).text(n + 1);
+        a.attr({ href: "#!",id:`page${page}`, onclick: `changePage(${page})` }).addClass('').text(n + 1);
         pagination.append(a);
       }
       pagination.append(
         $("<a>").attr({ href: "#!", id:'lastPage', onclick: `changePage(${numPages})` }).html("&raquo;")
       );
-      console.log(pagination.html());
+      // console.log(pagination.html());
 
       let habitat = "<br>";
       try {
@@ -547,7 +547,7 @@ const createTable = (page, perPage, countries) => {
     const subNationals = country.elementSubnationals;
     for (let j = 0; j < subNationals.length; j++) {
       numRows++;
-      console.log({ numRows });
+      // console.log({ numRows });
 
       const subNat = subNationals[j];
       const tr = $("<tr>").addClass("natRow");
@@ -594,13 +594,17 @@ const createTable = (page, perPage, countries) => {
   return table;
 };
 
-const changePage = (e) => {
-  console.log(e);
+const changePage = (page) => {
+  console.log(page);
   const natTable = $("#national-table");
   const countries = natTable.data("countries");
   const perPage = natTable.data("perPage");
-  const table = createTable(e, perPage, countries);
+  const table = createTable(page, perPage, countries);
   natTable.replaceWith(table);
+  console.log($(`#page${page}`).addClass("active"));
+  $(".pagination .active").removeClass("active");
+  $(`#page${page}`).addClass('active');
+  
 };
 
 //sideNav
