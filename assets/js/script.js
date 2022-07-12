@@ -212,7 +212,7 @@ const populateSidenav = (data) => {
   // const background = $('<div>')
   // const bgImg = $('<img>')
 
-  let countries
+  let countries;
 
   const species = data.speciesGlobal;
   const sc = data.speciesCharacteristics;
@@ -307,8 +307,9 @@ const populateSidenav = (data) => {
         onkeyup: "searchNats()",
         placeholder: "Search...",
       });
-      countries = data.elementNationals
-      let table = makeTable(1,10, countries)
+
+      countries = data.elementNationals;
+      let table = createTable(1, countries);
 
       let habitat = "";
       try {
@@ -502,63 +503,68 @@ const searchNats = () => {
   }
 };
 
-const makeTable = (start, end,countries) => {
+const createTable = (page, countries) => {
+  let table = $("<table>")
+    .attr({ id: "national-table" })
+    .addClass("striped")
+    .data({ countries: countries });
+  const thead = $("<thead>").append($("<tr>"));
+  const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
+  headers.forEach((header) => thead.append(`<th>${header}</th>`));
+  const tbody = $("<tbody>");
 
+  let numRows = 0;
+  let end = page * 10;
+  let start = end - 9;
 
-      let table = $("<table>")
-        .attr({ id: "national-table" })
-        .addClass("striped");
-      const thead = $("<thead>").append($("<tr>"));
-      const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
-      headers.forEach((header) => thead.append(`<th>${header}</th>`));
-      const tbody = $("<tbody>");
+  for (let i = 0; i < countries.length; i++) {
+    const country = countries[i];
+    const countryName = country.nation.nameEn;
+    const subNationals = country.elementSubnationals;
+    for (let j = 0; j < subNationals.length; j++) {
+      numRows++;
+      console.log({ numRows });
 
-      
+      const subNat = subNationals[j];
+      const tr = $("<tr>").addClass("natRow");
+      const subnation = subNat.subnation.nameEn;
+      const exotic = subNat.speciesSubnational.exotic;
+      const hybrid = subNat.speciesSubnational.hybrid;
+      const native = subNat.speciesSubnational.native;
 
-      let numRows = -1;
-      start = 5
-      end = 10
-      for (let i = 0; i < countries.length; i++) {
-        const country = countries[i];
-        const countryName = country.nation.nameEn;
-        const subNationals = country.elementSubnationals;
-        for (let j = 0; j < subNationals.length; j++) {
-          numRows++;
-          console.log({ numRows });
-          
-          const subNat = subNationals[j];
-          const tr = $("<tr>").addClass("natRow");
-          const subnation = subNat.subnation.nameEn;
-          const exotic = subNat.speciesSubnational.exotic;
-          const hybrid = subNat.speciesSubnational.hybrid;
-          const native = subNat.speciesSubnational.native;
+      if (numRows < start || numRows > end) tr.css({ display: "none" });
+      else tr.css({ display: "" });
 
-          if (numRows <= start || numRows > end) tr.css({ display: 'none' })
-          else tr.css({display:''})
-          
-
-          const dataSet = [countryName, subnation, native, exotic, hybrid];
-          dataSet.forEach((data) => {
-            const td = $("<td>");
-            if (data !== true && data !== false) td.addClass("tableFilter");
-            switch (data) {
-              case true:
-                data =
-                  '<i style="color:green" class="material-icons">check_circle</i>';
-                break;
-              case false:
-                data = '<i style="color:red" class="material-icons">cancel</i>';
-                break;
-            }
-
-            tr.append(td.html(data));
-          });
-          tbody.append(tr);
+      const dataSet = [countryName, subnation, native, exotic, hybrid];
+      dataSet.forEach((data) => {
+        const td = $("<td>");
+        if (data !== true && data !== false) td.addClass("tableFilter");
+        switch (data) {
+          case true:
+            data =
+              '<i style="color:green" class="material-icons">check_circle</i>';
+            break;
+          case false:
+            data = '<i style="color:red" class="material-icons">cancel</i>';
+            break;
         }
-      }
+
+        tr.append(td.html(data));
+      });
+      tbody.append(tr);
+    }
+  }
   table.append(thead, tbody);
-  return table
-}
+  return table;
+};
+
+const changePage = (page) => {
+  let natTable = $("#national-table")
+  let countries = natTable.data("countries");
+  console.log(countries)
+  let table = makeTable(page, countries);
+  natTable.replaceWith(table)
+};
 
 //sideNav
 const sideNav = $("<ul>");
