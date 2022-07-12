@@ -309,16 +309,40 @@ const populateSidenav = (data) => {
       });
 
       countries = data.elementNationals;
-      let table = createTable(1, countries);
 
-      let habitat = "";
+      const numSubnats = countries.reduce(
+        (a, b) => a.elementSubnationals.length + b.elementSubnationals.length
+      );
+      let perPage = 5;
+      let numPages = Math.ceil(numSubnats / perPage);
+
+      let table = createTable(1, perPage, countries);
+
+      console.log("adding pagination");
+      let pagination = $("<div>").addClass("pagination");
+      pagination.append(
+        $("<a>").attr({ href: "#!", id:'firstPage', onclick: "changePage(1)" }).html("&laquo;")
+      );
+      for (let n = 0; n < numPages; n++) {
+        let page = n+1
+        let a = $("<a>");
+        if (n == 0) a.addClass("active");
+        a.attr({ href: "#!",id:`page${page}`, onclick: `changePage(${page})` }).text(n + 1);
+        pagination.append(a);
+      }
+      pagination.append(
+        $("<a>").attr({ href: "#!", id:'lastPage', onclick: `changePage(${numPages})` }).html("&raquo;")
+      );
+      console.log(pagination.html());
+
+      let habitat = "<br>";
       try {
         const majorHabitat = ac.majorHabitat.majorHabitatDescEn;
-        habitat = !!majorHabitat
+        habitat += !!majorHabitat
           ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
           : habitat;
       } catch (err) {}
-      bodyText.append(natSearch, table, habitat);
+      bodyText.append(natSearch, table, pagination, habitat);
     }
 
     //Food Habits
@@ -503,19 +527,19 @@ const searchNats = () => {
   }
 };
 
-const createTable = (page, countries) => {
+const createTable = (page, perPage, countries) => {
   let table = $("<table>")
     .attr({ id: "national-table" })
     .addClass("striped")
-    .data({ countries: countries });
+    .data({ countries: countries, perPage, perPage });
   const thead = $("<thead>").append($("<tr>"));
   const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
   headers.forEach((header) => thead.append(`<th>${header}</th>`));
   const tbody = $("<tbody>");
 
   let numRows = 0;
-  let end = page * 10;
-  let start = end - 9;
+  let end = page * perPage;
+  let start = end - perPage + 1;
 
   for (let i = 0; i < countries.length; i++) {
     const country = countries[i];
@@ -554,16 +578,29 @@ const createTable = (page, countries) => {
       tbody.append(tr);
     }
   }
+
+  // return
+  // let pagination = `<ul class="pagination">
+  //   <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+  //   <li class="active"><a href="#!">${page}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+1}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+2}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+3}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+4}</a></li>
+  //   <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+  // </ul>`;
+
   table.append(thead, tbody);
   return table;
 };
 
-const changePage = (page) => {
-  let natTable = $("#national-table")
-  let countries = natTable.data("countries");
-  console.log(countries)
-  let table = makeTable(page, countries);
-  natTable.replaceWith(table)
+const changePage = (e) => {
+  console.log(e);
+  const natTable = $("#national-table");
+  const countries = natTable.data("countries");
+  const perPage = natTable.data("perPage");
+  const table = createTable(e, perPage, countries);
+  natTable.replaceWith(table);
 };
 
 //sideNav

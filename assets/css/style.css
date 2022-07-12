@@ -89,13 +89,13 @@ video {
 *{
     margin: 0;
     padding: 0;
-    /* Padding and border are included in the element's total width and height */
+    /* Padding and border are included in the element's total width and height
     -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    -moz-box-sizing: border-box; */
+    /* box-sizing: border-box; */
     font:bold 14px Aria,sans-serif;
-    list-style: none;
-    text-decoration: none;
+    /* list-style: none; */
+    /* text-decoration: none; */
 }
 
 html {
@@ -183,3 +183,22 @@ html {
 .collapsible-body li{
     line-height: 24px
 }
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
