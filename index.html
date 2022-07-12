@@ -83,14 +83,14 @@
     </header>
     <br />
     <main>
-      <div class="column">
-        <form class="col s12">
-          <div class="column">
+      <div class="container">
+        <form class="col s6">
+          <div class="col">
             <div class="input-field col s6">
               <input id="searchinput" type="text" class="validate" />
               <label for="searchinput">Enter Zip Code</label>
             </div>
-          </div>
+          
           <div class="flex-container">
             <div class="buttons">
               <button id="searchbutton" class="btn hvr-grow" type="button">
@@ -98,7 +98,19 @@
               </button>
             </div>
           </div>
-        </form>
+        </div>
+      </form>
+      <div class="container">
+            <div class="col">
+              <div class="input-field col s6">
+                <input value="" id="quick-search" type="text" class="validate">
+                <label class="active" for="quick-search">Quick Search</label>
+              </div>
+            </div>
+          </div>     
+      </div>
+        
+        
     </div>
 
       </div>
@@ -115,6 +127,7 @@
         </p>
       </div>
     </footer>
+
 
     <script type="text/javascript" src="./assets/js/script.js"></script>
     <!--  <script type="text/javascript" src="./assets/js/ -->
