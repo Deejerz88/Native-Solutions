@@ -212,6 +212,8 @@ const populateSidenav = (data) => {
   // const background = $('<div>')
   // const bgImg = $('<img>')
 
+  let countries;
+
   const species = data.speciesGlobal;
   const sc = data.speciesCharacteristics;
   const ac = data.animalCharacteristics;
@@ -306,82 +308,41 @@ const populateSidenav = (data) => {
         placeholder: "Search...",
       });
 
-      let table = $("<table>")
-        .attr({ id: "national-table" })
-        .addClass("striped");
-      const thead = $("<thead>").append($("<tr>"));
-      const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
-      headers.forEach((header) => thead.append(`<th>${header}</th>`));
-      const tbody = $("<tbody>");
+      countries = data.elementNationals;
 
-      const countries = data.elementNationals;
-      countries.forEach((country) => {
-        const countryName = country.nation.nameEn;
-        const subNationals = country.elementSubnationals;
+      const numSubnats = countries.reduce(
+        (a, b) => a.elementSubnationals.length + b.elementSubnationals.length
+      );
+      let perPage = 5;
+      let numPages = Math.ceil(numSubnats / perPage);
 
-        subNationals.forEach((subNat) => {
-          const tr = $("<tr>").addClass("natRow");
-          const subnation = subNat.subnation.nameEn;
-          const exotic = subNat.speciesSubnational.exotic;
-          const hybrid = subNat.speciesSubnational.hybrid;
-          const native = subNat.speciesSubnational.native;
+      let table = createTable(1, perPage, countries);
 
-          const dataSet = [countryName, subnation, native, exotic, hybrid];
-          dataSet.forEach((data) => {
-            const td = $("<td>");
-            if (data !== true && data !== false) td.addClass("tableFilter");
-            switch (data) {
-              case true:
-                data =
-                  '<i style="color:green" class="material-icons">check_circle</i>';
-                break;
-              case false:
-                data = '<i style="color:red" class="material-icons">cancel</i>';
-                break;
-            }
+      console.log("adding pagination");
+      let pagination = $("<div>").addClass("pagination");
+      pagination.append(
+        $("<a>").attr({ href: "#!", id:'firstPage', onclick: "changePage(1)" }).html("&laquo;")
+      );
+      for (let n = 0; n < numPages; n++) {
+        let page = n+1
+        let a = $("<a>");
+        if (n == 0) a.addClass("active");
+        a.attr({ href: "#!",id:`page${page}`, onclick: `changePage(${page})` }).text(n + 1);
+        pagination.append(a);
+      }
+      pagination.append(
+        $("<a>").attr({ href: "#!", id:'lastPage', onclick: `changePage(${numPages})` }).html("&raquo;")
+      );
+      console.log(pagination.html());
 
-            tr.append(td.html(data));
-          });
-          tbody.append(tr);
-        });
-
-        // nationals[countryName] = {};
-        // console.log({ nationals });
-        // const subNationals = country.elementSubnationals;
-        // subNationals.forEach((subNat) => {
-        //   const subnation = subNat.subnation.nameEn;
-        //   const exotic = subNat.speciesSubnational.exotic;
-        //   const hybrid = subNat.speciesSubnational.hybrid;
-        //   const native = subNat.speciesSubnational.native;
-        //   tableData.push({ countryName, subnation, exotic, hybrid, native });
-        // });
-        // console.log({ tableData });
-        // subNationals.forEach((subNat) => {
-        //   console.log({subNat})
-        //   const info = {
-        //     subnation: subNat.subnation.nameEn,
-        //     exotic: subNat.speciesSubnational.exotic,
-        //     hybrid: subNat.speciesSubnational.hybrid,
-        //     native: subNat.speciesSubnational.native,
-        //   };
-        //   nationals[countryName][info.subnation] = {
-        //     exotic: info.exotic,
-        //     hybrid: info.hybrid,
-        //     native: info.native,
-        //   };
-        // });
-      });
-      // console.log({ nationals });
-      table.append(thead, tbody);
-
-      let habitat = "";
+      let habitat = "<br>";
       try {
         const majorHabitat = ac.majorHabitat.majorHabitatDescEn;
-        habitat = !!majorHabitat
+        habitat += !!majorHabitat
           ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
           : habitat;
       } catch (err) {}
-      bodyText.append(natSearch, table, habitat);
+      bodyText.append(natSearch, table, pagination, habitat);
     }
 
     //Food Habits
@@ -564,6 +525,82 @@ const searchNats = () => {
       }
     }
   }
+};
+
+const createTable = (page, perPage, countries) => {
+  let table = $("<table>")
+    .attr({ id: "national-table" })
+    .addClass("striped")
+    .data({ countries: countries, perPage, perPage });
+  const thead = $("<thead>").append($("<tr>"));
+  const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
+  headers.forEach((header) => thead.append(`<th>${header}</th>`));
+  const tbody = $("<tbody>");
+
+  let numRows = 0;
+  let end = page * perPage;
+  let start = end - perPage + 1;
+
+  for (let i = 0; i < countries.length; i++) {
+    const country = countries[i];
+    const countryName = country.nation.nameEn;
+    const subNationals = country.elementSubnationals;
+    for (let j = 0; j < subNationals.length; j++) {
+      numRows++;
+      console.log({ numRows });
+
+      const subNat = subNationals[j];
+      const tr = $("<tr>").addClass("natRow");
+      const subnation = subNat.subnation.nameEn;
+      const exotic = subNat.speciesSubnational.exotic;
+      const hybrid = subNat.speciesSubnational.hybrid;
+      const native = subNat.speciesSubnational.native;
+
+      if (numRows < start || numRows > end) tr.css({ display: "none" });
+      else tr.css({ display: "" });
+
+      const dataSet = [countryName, subnation, native, exotic, hybrid];
+      dataSet.forEach((data) => {
+        const td = $("<td>");
+        if (data !== true && data !== false) td.addClass("tableFilter");
+        switch (data) {
+          case true:
+            data =
+              '<i style="color:green" class="material-icons">check_circle</i>';
+            break;
+          case false:
+            data = '<i style="color:red" class="material-icons">cancel</i>';
+            break;
+        }
+
+        tr.append(td.html(data));
+      });
+      tbody.append(tr);
+    }
+  }
+
+  // return
+  // let pagination = `<ul class="pagination">
+  //   <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+  //   <li class="active"><a href="#!">${page}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+1}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+2}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+3}</a></li>
+  //   <li class="waves-effect"><a href="#!">${page+4}</a></li>
+  //   <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+  // </ul>`;
+
+  table.append(thead, tbody);
+  return table;
+};
+
+const changePage = (e) => {
+  console.log(e);
+  const natTable = $("#national-table");
+  const countries = natTable.data("countries");
+  const perPage = natTable.data("perPage");
+  const table = createTable(e, perPage, countries);
+  natTable.replaceWith(table);
 };
 
 //sideNav
