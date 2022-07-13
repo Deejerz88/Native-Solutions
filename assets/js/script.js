@@ -70,21 +70,21 @@ const getData = (location) => {
   //   ];
 
   // if (!!taxSearch && !!advanced.val())
-    // searchCriteria.speciesTaxonomyCriteria = [
-    //   {
-    //     paramType: "scientificTaxonomy",
-    //     level: 'KINGDOM',
-    //     scientificTaxonomy: 'plants',
-    //     kingdom: 'plants',
-    //   },
-    // ];
-  
+  // searchCriteria.speciesTaxonomyCriteria = [
+  //   {
+  //     paramType: "scientificTaxonomy",
+  //     level: 'KINGDOM',
+  //     scientificTaxonomy: 'plants',
+  //     kingdom: 'plants',
+  //   },
+  // ];
+
   // console.log(searchCriteria)
 
   // // if (!!taxSearch && !advanced.val())
-  //   searchCriteria.speciesTaxonomyCriteria = [
-  //     { paramType: "informalTaxonomy", informalTaxonomy: 'Plants' },
-  //   ];
+  searchCriteria.speciesTaxonomyCriteria = [
+    { paramType: "informalTaxonomy", informalTaxonomy: "Plants" },
+  ];
   // if (!!locationEl.val())
   //   searchCriteria.locationCriteria = [
   //     {
@@ -105,6 +105,7 @@ const getData = (location) => {
   }).then((res) => {
     if (res.ok)
       res.json().then((data) => {
+        console.log(data, data.results);
         data.results.forEach((organism) => {
           getOrganismInfo(organism.uniqueId);
         });
@@ -157,8 +158,8 @@ const createCard = (data) => {
 
   content.addClass("card-content");
   action.addClass("card-action");
-
-  // getImage()
+  //
+  // const imgUrl = getImage(sciName)
   img.attr({ src: `https://via.placeholder.com/100` }).css({ width: 100 });
 
   title.text(commonName);
@@ -194,15 +195,23 @@ const createCard = (data) => {
   searchResults.append(card);
 };
 
-const getImage = (species, kingdom) => {
-  let imgUrl = "https://apps.des.qld.gov.au/species-search/?f=json";
-  let taxIdURL = `https://apps.des.qld.gov.au/species/?op=speciessearch?species=${species}&kingdom=${kingdom}`;
-  fetch(taxIdURL).then((res) => {
-    if (res.ok)
-      res.json().then((data) => {
-        console.log(data);
+const getImage = (sciName) => {
+  let key = "AIzaSyClLuw93oZYShzT7DCia1VDsGLZQyiARm0";
+  let id = 'f70c22e56966f4573'
+  sciName = sciName.toString().replace(/ /g, "%20");
+  let url = `https://www.googleapis.com/customsearch/v1?key=${key}&cx=${id}&q=${sciName}&searchType=image&imgSize=large&imgType=photo&num=1`;
+  let imgUrl = "";
+  // console.log(url);
+  fetch(url).then((res) => {
+    if (res.ok) {
+      res.json().then((imgData) => {
+        imgUrl = imgData.items[0].link;
       });
+    } else console.log(res.error.message);
   });
+
+  console.log({imgUrl});
+  return imgUrl
 };
 
 const populateSidenav = (data) => {
@@ -221,7 +230,7 @@ const populateSidenav = (data) => {
   const ac = data.animalCharacteristics;
   const pc = data.plantCharacteristics;
   const rank = data.rankInfo;
-
+  const type = !!ac ? ac : pc;
   title.text(data.primaryCommonName);
   img
     .attr({ src: `https://via.placeholder.com/200` })
@@ -247,7 +256,9 @@ const populateSidenav = (data) => {
   categories.forEach((category) => {
     //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
     //
+    //Plants
     //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
+    //
     //
     //endangerment: grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds }, elementManagement { stewardshipOverview, biologicalResearchNeeds}
     //
@@ -323,23 +334,33 @@ const populateSidenav = (data) => {
       // console.log("adding pagination");
       let pagination = $("<div>").addClass("pagination");
       pagination.append(
-        $("<a>").attr({ href: "#!", id:'back', onclick: "shiftPage(back)" }).html("&laquo;")
+        $("<a>")
+          .attr({ href: "#!", id: "back", onclick: "shiftPage(back)" })
+          .html("&laquo;")
       );
       for (let n = 0; n < numPages; n++) {
-        let page = n+1
+        let page = n + 1;
         let a = $("<a>");
         if (n == 0) a.addClass("active");
-        a.attr({ href: "#!",id:`page${page}`, onclick: `changePage(${page})` }).addClass('').text(n + 1);
+        a.attr({
+          href: "#!",
+          id: `page${page}`,
+          onclick: `changePage(${page})`,
+        })
+          .addClass("")
+          .text(n + 1);
         pagination.append(a);
       }
       pagination.append(
-        $("<a>").attr({ href: "#!", id:'forward', onclick: `shiftPage(forward)` }).html("&raquo;")
+        $("<a>")
+          .attr({ href: "#!", id: "forward", onclick: `shiftPage(forward)` })
+          .html("&raquo;")
       );
       // console.log(pagination.html());
 
       let habitat = "<br>";
       try {
-        const majorHabitat = ac.majorHabitat.majorHabitatDescEn;
+        const majorHabitat = type.majorHabitat.majorHabitatDescEn;
         habitat += !!majorHabitat
           ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
           : habitat;
@@ -349,8 +370,9 @@ const populateSidenav = (data) => {
 
     //Food Habits
     else if (category === "Food Habits") {
-      const foodArr = ac.animalFoodHabits;
-      let foodDesc = ac.foodHabitsComments;
+      if (!!pc) return
+      const foodArr = type.animalFoodHabits;
+      let foodDesc = type.foodHabitsComments;
       const ul = $("<ul>");
 
       foodArr.forEach((habit) => {
@@ -369,15 +391,16 @@ const populateSidenav = (data) => {
     //Reproduction
     else if (category === "Reproduction") {
       bodyText.html(
-        `<b>Colonial Breeder:</b> ${ac.colonialBreeder}<br>${sc.reproductionComments}`
+        `<b>Colonial Breeder:</b> ${type.colonialBreeder}<br>${sc.reproductionComments}`
       );
     }
 
     //Phenology
     else if (category === "Phenology") {
+      if (!!pc) return
       //animalPhenologies, animalPhenologyComments,
-      let phenoDesc = ac.animalPhenologyComments;
-      const phenoArr = ac.animalPhenologies;
+      let phenoDesc = type.animalPhenologyComments;
+      const phenoArr = type.animalPhenologies;
       const ul = $("<ul>");
       phenoArr.forEach((pheno) => {
         const adult = pheno.adult;
@@ -396,6 +419,7 @@ const populateSidenav = (data) => {
 
     //Migration
     else if (category === "Migration") {
+      if (!!pc) return
       const migArr = [
         "nonMigrant",
         "localMigrant",
@@ -479,18 +503,25 @@ const populateSidenav = (data) => {
 
 const createBody = (data) => {
   const ac = data.animalCharacteristics;
+  const pc = data.plantCharacteristics;
   const sc = data.speciesCharacteristics;
-  let lww = "";
-  if (!!ac.length) lww += `<b>Length:</b> ${ac.length}mm`;
-  if (!!ac.width) lww += !lww ? "" : " | " + `<b>Width:</b> ${ac.width}mm`;
-  if (!!ac.weight) lww += !lww ? "" : " | " + `<b>Weigth:</b> ${ac.weight}<br>`;
-  let habitat = "";
-  try {
-    const majorHabitat = ac.majorHabitat.majorHabitatDescEn;
-    habitat = !!majorHabitat
-      ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
-      : habitat;
-  } catch (err) {}
+  const type = !!ac ? ac : pc;
+
+  if (!!ac) {
+    let lww = "";
+    if (!!type.length) lww += `<b>Length:</b> ${type.length}mm`;
+    if (!!type.width)
+      lww += !lww ? "" : " | " + `<b>Width:</b> ${type.width}mm`;
+    if (!!type.weight)
+      lww += !lww ? "" : " | " + `<b>Weigth:</b> ${type.weight}<br>`;
+    let habitat = "";
+    try {
+      const majorHabitat = type.majorHabitat.majorHabitatDescEn;
+      habitat = !!majorHabitat
+        ? `<b>Major Habitat:</b> ${majorHabitat}<br><br>`
+        : habitat;
+    } catch (err) {}
+  }
   let descText = sc.generalDescription;
   descText = !!descText ? descText : sc.habitatComments;
   let descArray;
@@ -605,17 +636,15 @@ const changePage = (page) => {
   natTable.replaceWith(table);
   console.log($(`#page${page}`).addClass("active"));
   $(".pagination .active").removeClass("active");
-  $(`#page${page}`).addClass('active');
-  
+  $(`#page${page}`).addClass("active");
 };
 
 const shiftPage = (dir) => {
-  console.log(dir.id)
-  let currPage = Number($(".pagination .active").text())
-  const page = dir.id === 'back' ? currPage - 1 : currPage + 1
-  changePage(page)
-
-}
+  console.log(dir.id);
+  let currPage = Number($(".pagination .active").text());
+  const page = dir.id === "back" ? currPage - 1 : currPage + 1;
+  changePage(page);
+};
 
 //sideNav
 const sideNav = $("<ul>");
