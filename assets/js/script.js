@@ -31,6 +31,7 @@ const getState = (location) => {
       res.json().then((data) => {
         // console.log(data);
         const address = data.results[0].address_components;
+        console.log({address})
         let state;
         let country;
         address.forEach((component, i) => {
@@ -56,9 +57,10 @@ const getData = (location) => {
   let searchCriteria = {};
   // const taxSearch = taxonomyEl.val()
   searchCriteria.criteriaType = "species";
+  let locType = !!location.state ? "subnation":"nation"
   searchCriteria.locationCriteria = [
     {
-      paramType: "subnation",
+      paramType: locType,
       subnation: location.state,
       nation: location.country,
     },
