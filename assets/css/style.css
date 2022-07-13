@@ -105,10 +105,6 @@ html {
     background-size: cover;
 }
 
-main {
-    
-}
-
 .container {
     justify-content: space-between;
     width: 50%;
@@ -119,6 +115,10 @@ main {
     font-weight: normal;
     color: #fff;
     text-decoration: underline;
+}
+
+.nav-extended {
+    background-color: rgb(57, 141, 86);
 }
 
 title {
@@ -169,56 +169,8 @@ title {
     text-align: center;
 }
 
-<<<<<<< HEAD
-.sidenav{
-    width: 50%;
-}
-
-.sidenav h2{
-    font-weight: bold;
-    font-size: 24pt;
-    padding: 0 10px
-}
-
-.sidenav p{
-    padding: 10px 20px;
-}
-
-.collapsible.popout > li.active{
-  margin: 24px 10px;
-  padding: 5px;
-}
-
-.collapsible.popout p{
-    margin: 15px;
-}
-
-.collapsible-body li{
-    line-height: 24px
-}
-
-.pagination {
-  display: inline-block;
-}
-
-.pagination a {
-  color: black;
-  float: left;
-  padding: 8px 16px;
-  text-decoration: none;
-  transition: background-color .3s;
-}
-
-.pagination a.active {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.pagination a:hover:not(.active) {background-color: #ddd;}
-=======
 .sidenav {
     width: 800px;
     background-color: rgb(73, 176, 97);
     text-decoration-color: white;
 }
->>>>>>> CSS-Frameworks
