@@ -70,18 +70,20 @@ const getData = (location) => {
   //   ];
 
   // if (!!taxSearch && !!advanced.val())
-  //   searchCriteria.speciesTaxonomyCriteria = [
-  //     {
-  //       paramType: "scientificTaxonomy",
-  //       level: taxSearch.level,
-  //       scientificTaxonomy: taxSearch.taxonomy,
-  //       kingdom: taxSearch.kingdom,
-  //     },
-  //   ];
+    // searchCriteria.speciesTaxonomyCriteria = [
+    //   {
+    //     paramType: "scientificTaxonomy",
+    //     level: 'KINGDOM',
+    //     scientificTaxonomy: 'plants',
+    //     kingdom: 'plants',
+    //   },
+    // ];
+  
+  // console.log(searchCriteria)
 
-  // if (!!taxSearch && !advanced.val())
+  // // if (!!taxSearch && !advanced.val())
   //   searchCriteria.speciesTaxonomyCriteria = [
-  //     { paramType: "informalTaxonomy", informalTaxonomy: taxonomyEl.val() },
+  //     { paramType: "informalTaxonomy", informalTaxonomy: 'Plants' },
   //   ];
   // if (!!locationEl.val())
   //   searchCriteria.locationCriteria = [
@@ -321,7 +323,7 @@ const populateSidenav = (data) => {
       // console.log("adding pagination");
       let pagination = $("<div>").addClass("pagination");
       pagination.append(
-        $("<a>").attr({ href: "#!", id:'firstPage', onclick: "changePage(1)" }).html("&laquo;")
+        $("<a>").attr({ href: "#!", id:'back', onclick: "shiftPage(back)" }).html("&laquo;")
       );
       for (let n = 0; n < numPages; n++) {
         let page = n+1
@@ -331,7 +333,7 @@ const populateSidenav = (data) => {
         pagination.append(a);
       }
       pagination.append(
-        $("<a>").attr({ href: "#!", id:'lastPage', onclick: `changePage(${numPages})` }).html("&raquo;")
+        $("<a>").attr({ href: "#!", id:'forward', onclick: `shiftPage(forward)` }).html("&raquo;")
       );
       // console.log(pagination.html());
 
@@ -606,6 +608,14 @@ const changePage = (page) => {
   $(`#page${page}`).addClass('active');
   
 };
+
+const shiftPage = (dir) => {
+  console.log(dir.id)
+  let currPage = Number($(".pagination .active").text())
+  const page = dir.id === 'back' ? currPage - 1 : currPage + 1
+  changePage(page)
+
+}
 
 //sideNav
 const sideNav = $("<ul>");
