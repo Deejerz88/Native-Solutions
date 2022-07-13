@@ -82,9 +82,9 @@ const getData = (location) => {
   // console.log(searchCriteria)
 
   // // if (!!taxSearch && !advanced.val())
-  searchCriteria.speciesTaxonomyCriteria = [
-    { paramType: "informalTaxonomy", informalTaxonomy: "Plants" },
-  ];
+  // searchCriteria.speciesTaxonomyCriteria = [
+  //   { paramType: "informalTaxonomy", informalTaxonomy: "Plants" },
+  // ];
   // if (!!locationEl.val())
   //   searchCriteria.locationCriteria = [
   //     {
