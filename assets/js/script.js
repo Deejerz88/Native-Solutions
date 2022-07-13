@@ -84,9 +84,9 @@ const getData = (location) => {
   // console.log(searchCriteria)
 
   // // if (!!taxSearch && !advanced.val())
-  // searchCriteria.speciesTaxonomyCriteria = [
-  //   { paramType: "informalTaxonomy", informalTaxonomy: "Plants" },
-  // ];
+  searchCriteria.speciesTaxonomyCriteria = [
+    { paramType: "informalTaxonomy", informalTaxonomy: "Plants" },
+  ];
   // if (!!locationEl.val())
   //   searchCriteria.locationCriteria = [
   //     {
@@ -165,7 +165,7 @@ const createCard = (data) => {
   img.attr({ src: `https://via.placeholder.com/100` }).css({ width: 100 });
 
   title.text(commonName);
-  title.css({ color: "black" });
+  // title.css({ color: "black" });
 
   fab
     .attr({ href: "#", "data-target": "slide-out" })
@@ -281,7 +281,9 @@ const populateSidenav = (data) => {
 
     //General Info
     if (category === "General Info") {
-      desc.html(createBody(data));
+      let bodyData = createBody(data);
+      if (!bodyData) return
+      desc.html(bodyData);
       bodyText.append(desc);
     }
 
@@ -524,18 +526,25 @@ const createBody = (data) => {
         : habitat;
     } catch (err) {}
   }
+  
+  
   let descText = sc.generalDescription;
-  descText = !!descText ? descText : sc.habitatComments;
-  let descArray;
-  try {
-    descArray = descText.split(";");
-    let descList = $("<ul>").addClass("descList");
-    descArray.forEach((des) => {
-      descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
-    });
-    descText = $("<ul>").append(descList.clone()).html();
-    descText = lww + habitat + descText;
-  } catch (err) {}
+  descText = !!descText ? descText : ''
+  if (!!descText) {
+    let descArray;
+    try {
+      descArray = descText.split(";");
+      let descList = $("<ul>").addClass("descList");
+      descArray.forEach((des) => {
+        descList.append($("<li>").text(des).css({ "list-style-type": "disc" }));
+      });
+      descText = $("<ul>").append(descList.clone()).html();
+      descText = lww + habitat + descText;
+    } catch (err) { }
+  }
+  let char = sc.diagnosticCharacteristics;
+
+  if (!!char) descText = descText + '<br>' + char
   return descText;
 };
 
