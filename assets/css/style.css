@@ -122,10 +122,6 @@ html {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.header {
-    background-image: url(assets\images\trees.jpg);
-}
-
 .alert-warning {
     background-color:rgb(255, 172, 64);
     color: #f2f2f2;
