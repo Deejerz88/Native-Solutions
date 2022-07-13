@@ -119,10 +119,15 @@ html {
 
 .nav-extended {
     background-color: rgb(57, 141, 86);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.header {
+    background-image: url(assets\images\trees.jpg);
 }
 
 .alert-warning {
-    background-color:darkorange;
+    background-color:rgb(255, 172, 64);
     color: #f2f2f2;
     justify-content: center;
     height: 100%;
@@ -160,13 +165,45 @@ html {
     justify-content: center;  
     padding: 5px;
     bottom:0;
-    position:absolute;
+    position: bottom;
     width:100%;
     text-align: center;
 }
 
 .sidenav {
     width: 800px;
-    background-color: rgb(73, 176, 97);
+    background-color: rgb(73, 176, 107);
     text-decoration-color: white;
+}
+
+.card-title {
+    margin-left: 100px;
+    background-color: rgb(128, 196, 231);
+    
+}
+
+.card-content {
+    background-color: bisque;
+}
+
+span {
+    text-align: right;
+}
+
+p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+li {
+    margin: 20px;
+}
+
+.descList {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+ul {
+    text-align: left;
 }
