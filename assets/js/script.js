@@ -514,6 +514,7 @@ const populateSidenav = (data) => {
 
 const createBody = (data) => {
   const ac = data.animalCharacteristics;
+  console.log(!!ac)
   const pc = data.plantCharacteristics;
   const sc = data.speciesCharacteristics;
   const type = !!ac ? ac : pc;
@@ -536,7 +537,9 @@ const createBody = (data) => {
   
   
   let descText = sc.generalDescription;
+
   descText = !!descText ? descText : ''
+
   if (!!descText) {
     let descArray;
     try {
@@ -552,6 +555,7 @@ const createBody = (data) => {
   let char = sc.diagnosticCharacteristics;
 
   if (!!char) descText = descText + '<br>' + char
+  console.log({descText})
   return descText;
 };
 
