@@ -108,6 +108,7 @@ const getData = (location) => {
     if (res.ok)
       res.json().then((data) => {
         console.log(data, data.results);
+        if (!!data.results) searchResults.empty()
         data.results.forEach((organism) => {
           getOrganismInfo(organism.uniqueId);
         });
@@ -170,7 +171,7 @@ const createCard = (data) => {
   fab
     .attr({ href: "#", "data-target": "slide-out" })
     .addClass(
-      "btn-floating halfway-fab waves-effect waves-light red sidenav-trigger"
+      "btn-floating halfway-fab waves-effect waves-light red sidenav-trigger pulse"
     );
   icon.addClass("material-icons").text("info");
   fab.append(icon);
@@ -578,7 +579,11 @@ const createTable = (page, perPage, countries) => {
     .data({ countries: countries, perPage, perPage });
   const thead = $("<thead>").append($("<tr>"));
   const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
-  headers.forEach((header) => thead.append(`<th>${header}</th>`));
+  headers.forEach((header, i) => {
+    let th = $('<th>')
+    if (i>1) th.addClass('center-align')
+    thead.append(th.append(header))
+  })
   const tbody = $("<tbody>");
 
   let numRows = 0;
@@ -605,8 +610,9 @@ const createTable = (page, perPage, countries) => {
 
       const dataSet = [countryName, subnation, native, exotic, hybrid];
       dataSet.forEach((data) => {
-        const td = $("<td>");
-        if (data !== true && data !== false) td.addClass("tableFilter");
+        const td = $("<td>")
+        if (data !== true && data !== false) td.addClass("tableFilter")
+        else td.addClass('center-align')
         switch (data) {
           case true:
             data =
