@@ -258,7 +258,6 @@ const populateSidenav = (data) => {
     "Phenology",
     "Migration",
     "Population & Endangerment",
-    "Plant Characteristics",
   ];
   collapsible.addClass("collapsible popout");
 
@@ -289,6 +288,7 @@ const populateSidenav = (data) => {
     //General Info
     if (category === "General Info") {
       let bodyData = createBody(data);
+      console.log({bodyData})
       if (!bodyData) return
       desc.html(bodyData);
       bodyText.append(desc);
