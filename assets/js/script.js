@@ -171,7 +171,7 @@ const createCard = (data) => {
   fab
     .attr({ href: "#", "data-target": "slide-out" })
     .addClass(
-      "btn-floating halfway-fab waves-effect waves-light red sidenav-trigger pulse"
+      "btn-floating halfway-fab red sidenav-trigger pulse"
     );
   icon.addClass("material-icons").text("info");
   fab.append(icon);
