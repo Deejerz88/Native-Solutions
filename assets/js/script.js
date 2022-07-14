@@ -122,7 +122,7 @@ const getData = (location) => {
 
 searchBtn.on("click", submitHandler);
 
-const getOrganismInfo = (id) => {
+const getOrganismInfo = (id,origin) => {
   //Get Plant Info
   let url = `https://explorer.natureserve.org/api/data/taxon/${id}`;
   // let url = "http://plants.usda.gov/api/plants/search";
@@ -130,7 +130,9 @@ const getOrganismInfo = (id) => {
     if (res.ok)
       res.json().then((data) => {
         console.log(data.primaryCommonName, data);
-        createCard(data);
+        if (origin !== 'favorites') {
+          createCard(data);
+        } else{populateSidenav(data)}
       });
   });
 };
@@ -606,15 +608,15 @@ const showFavorites = (favorites) => {
     const name = favorite[0]
     const id = favorite[1]
     row.append(
+     
       $("<div>")
         .addClass(`valign-wrapper col s${numCol} favorite`)
         .html(
-          `<i style='color:red' class="material-icons">favorite</i><div><b>${name}</b></div>`
+          `<a href='#' class='sidenav-trigger' data-target='slide-out'><i style='color:red' class="material-icons">favorite</i><b>${name}</b></a>`
         )
         .on("click", () => {
-          console.log(id);
-        })
-    );
+          getOrganismInfo(id,'favorites')
+        }))
   })
 
 favContainer.append(row)
