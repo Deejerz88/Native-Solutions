@@ -87,8 +87,8 @@ video {
 } */
 
 * {
-  margin: 0;
-  padding: 0;
+  /* margin: 0; */
+  /* padding: 0; */
   /* Padding and border are included in the element's total width and height
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box; */
@@ -221,4 +221,25 @@ li {
 
 ul {
     text-align: left;
+}
+
+#favorites{
+ border: 1px solid rgb(57, 141, 86);
+ border-radius: 6px;
+ background-color: white;
+ /* margin: 20px 0; */
+ justify-content: center ;
+ box-shadow: 0 0 5px rgb(57, 141, 86);
+}
+
+#favorite{
+  transition: all .2s ease-in-out
+}
+
+#favorite:hover{
+  font-size:16px;
+}
+
+#searchbutton{
+  margin-bottom: 20px
 }

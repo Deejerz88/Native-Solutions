@@ -5,7 +5,9 @@ const taxonomyEl = $("#taxonomy");
 const advanced = $("#advanced");
 const endangermentEl = $("#endangerment");
 const locationEl = $("#location");
-
+const favContainer = $('#favorites')
+const quickSearch = $('#quick-search')
+let favorites
 searchInput.val("Michigan");
 //Get API Keys from AWS Lambda
 const apiURL =
@@ -52,7 +54,10 @@ const getState = (location) => {
 
 const getData = (location) => {
   //Search for plants/animals
+  const plantAnimal = $("input[name=group1]:checked").next().text()
+  console.log(plantAnimal)
   let url = "https://explorer.natureserve.org/api/data/speciesSearch";
+  const qs = quickSearch.val()
   //Future Filters: quick search, status (endangerment), location (Country, state), species taxonomy (scientific & informal searches),
   let searchCriteria = {};
   // const taxSearch = taxonomyEl.val()
@@ -66,10 +71,10 @@ const getData = (location) => {
     },
   ];
 
-  // if (!!searchInput.val())
-  //   searchCriteria.textCriteria = [
-  //     { paramType: "quickSearch", searchToken: searchInput.val() },
-  //   ];
+  if (!!qs)
+    searchCriteria.textCriteria = [
+      { paramType: "quickSearch", searchToken: qs },
+    ];
 
   // if (!!taxSearch && !!advanced.val())
   // searchCriteria.speciesTaxonomyCriteria = [
@@ -82,10 +87,9 @@ const getData = (location) => {
   // ];
 
   // console.log(searchCriteria)
-
-  // // if (!!taxSearch && !advanced.val())
+  if (!!plantAnimal)
   searchCriteria.speciesTaxonomyCriteria = [
-    { paramType: "informalTaxonomy", informalTaxonomy: "Plants" },
+    { paramType: "informalTaxonomy", informalTaxonomy: plantAnimal },
   ];
   // if (!!locationEl.val())
   //   searchCriteria.locationCriteria = [
@@ -170,9 +174,7 @@ const createCard = (data) => {
 
   fab
     .attr({ href: "#", "data-target": "slide-out" })
-    .addClass(
-      "btn-floating halfway-fab red sidenav-trigger pulse"
-    );
+    .addClass("btn-floating halfway-fab red sidenav-trigger pulse");
   icon.addClass("material-icons").text("info");
   fab.append(icon);
 
@@ -180,12 +182,14 @@ const createCard = (data) => {
 
   content.html(`<b>Scientific Name:</b> ${sciName} <p>${descText}`);
   content.css({ color: "black" });
-
+  // https://explorer.natureserve.org/Taxon/${id}/${sciName}
   link
     .attr({
-      href: `https://explorer.natureserve.org/Taxon/${id}/${sciName}`,
+      href: `#!`,
     })
-    .text("Add to Favorites");
+    .text("Add to Favorites")
+    .on("click", addToFavorites)
+    .data({ "id": data.uniqueId,"name":commonName });
   action.append(link);
 
   fab.on("click", (e) => {
@@ -572,6 +576,51 @@ const searchNats = () => {
   }
 };
 
+const addToFavorites = (e) => {
+  e.stopPropagation();
+  favorites = JSON.parse(localStorage.getItem("natureFavorites"));
+  favorites = !!favorites ? favorites : {};
+  const tgt = $(e.target);
+  const id = tgt.data("id");
+  const name = tgt.data("name");
+  console.log(id, name);
+  favorites[name] = id;
+  localStorage.setItem("natureFavorites", JSON.stringify(favorites));
+  showFavorites(favorites);
+};
+
+const showFavorites = (favorites) => {
+  favContainer.empty();
+
+  favContainer.append($('<h5>').text('Favorites:').css({'font-weight':'bold','margin-left':'5px'}))
+  console.log({ favorites })
+  favorites = !!favorites
+    ? favorites
+    : JSON.parse(localStorage.getItem("natureFavorites"));
+   favorites = !!favorites ? favorites : {};
+  const row = $('<div>').addClass('row').attr({id:'favRow'})
+  favArr = Object.entries(favorites);
+  let numCol = Math.floor(12 / favArr.length);
+  numCol = numCol > 0 ? numCol:1
+  favArr.forEach(favorite => {
+    const name = favorite[0]
+    const id = favorite[1]
+    row.append(
+      $("<div>")
+        .addClass(`valign-wrapper col s${numCol} favorite`)
+        .html(
+          `<i style='color:red' class="material-icons">favorite</i><div><b>${name}</b></div>`
+        )
+        .on("click", () => {
+          console.log(id);
+        })
+    );
+  })
+
+favContainer.append(row)
+}
+
+
 const createTable = (page, perPage, countries) => {
   let table = $("<table>")
     .attr({ id: "national-table" })
@@ -669,4 +718,8 @@ $("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));
 
 $(document).ready(function () {
   $(".sidenav").sidenav();
+  
 });
+
+// getFavorites();
+showFavorites();
