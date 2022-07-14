@@ -160,7 +160,7 @@ const createCard = (data) => {
   cardContainer.addClass("row");
   col.addClass("col s6 m6 l6");
   card.addClass("card");
-  imgContainer.addClass("card-image");
+  // imgContainer.addClass("card-image");
   title.addClass("card-title");
   // fabDiv.addClass("row");
   cardContainer.append(col.append(card));
@@ -169,7 +169,7 @@ const createCard = (data) => {
   action.addClass("card-action");
   //
   // const imgUrl = getImage(sciName)
-  img.attr({ src: `https://via.placeholder.com/100` }).css({ width: 100 });
+  // img.attr({ src: `https://via.placeholder.com/100` }).css({ width: 100 });
 
   title.text(commonName);
   // title.css({ color: "black" });
@@ -227,7 +227,7 @@ const populateSidenav = (data) => {
   sideNav.empty();
   const collapsible = $("<ul>");
   const title = $("<h2>");
-  const img = $("<img>");
+  // const img = $("<img>");
   const desc = $("<p>");
   // const background = $('<div>')
   // const bgImg = $('<img>')
@@ -241,12 +241,12 @@ const populateSidenav = (data) => {
   const rank = data.rankInfo;
   const type = !!ac ? ac : pc;
   title.text(data.primaryCommonName);
-  img
-    .attr({ src: `https://via.placeholder.com/200` })
-    .css({ width: 200, margin: 20 });
+  // img
+  //   .attr({ src: `https://via.placeholder.com/200` })
+  //   .css({ width: 200, margin: 20 });
   sideNav.append(
     title,
-    img,
+    // img,
     $("<li>").addClass("no padding").append(collapsible)
   );
   const categories = [
