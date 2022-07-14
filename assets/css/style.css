@@ -190,3 +190,35 @@ html {
 .collapsible-body li{
     line-height: 24px
 }
+
+.card-title {
+    margin-left: 100px;
+    background-color: rgb(128, 196, 231);
+    
+}
+
+.card-content {
+    background-color: bisque;
+}
+
+span {
+    text-align: right;
+}
+
+p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+li {
+    margin: 20px;
+}
+
+.descList {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+ul {
+    text-align: left;
+}
