@@ -31,11 +31,17 @@ Repository URL: https://github.com/Deejerz88/Native-Solutions
 ## Screenshots
 
 - Initial Search
-  - Example of a location only search for the state of Michigan
-    <img src="assets/images/native-solutions.png">
+  - Example of a Plant search for the state of Michigan
+    <img src="assets/images/1.png">
+    <img src="assets/images/5.png">
+    - Location only   
+        <img src="assets/images/native-solutions.png">
 - SideNav
   - Demonstrates SideNav populated with data on selected plant/animal
     <img src="assets/images/native-solutions-sidenav.png">
+- Favorites
+    - Click to add to favorites
+    <img src="assets/images/4.png">
 
 ## Made With
 

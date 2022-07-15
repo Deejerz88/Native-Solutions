@@ -8,7 +8,6 @@ const locationEl = $("#location");
 const favContainer = $("#favorites");
 const quickSearch = $("#quick-search");
 let favorites;
-searchInput.val("Michigan");
 
 //Get API Keys from AWS Lambda
 const apiURL =
