@@ -189,7 +189,7 @@ const createCard = (data) => {
     .attr({
       href: `#!`,
     })
-    .text("Add to Favorites")
+    .html('<i style="color:red" class="material-icons">favorite</i> Add to Favorites')
     .on("click", addToFavorites)
     .data({ "id": data.uniqueId,"name":commonName });
   action.append(link);

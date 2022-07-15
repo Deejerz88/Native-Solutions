@@ -97,7 +97,9 @@ video {
   /* list-style: none; */
   /* text-decoration: none; */
 }
-
+body{
+   background: url('https://img.freepik.com/free-vector/watercolor-nature-background-with-leaves_52683-59449.jpg?w=2000') repeat;
+}
 html {
   height: 100%;
   background: white;
@@ -105,7 +107,7 @@ html {
   background-size: cover;
 }
 main{
-  background: url('https://img.freepik.com/free-vector/watercolor-nature-background-with-leaves_52683-59449.jpg?w=2000');
+ 
   /* background-size:100vh; */
   height: 100vh
 }
@@ -170,7 +172,7 @@ main{
 
 .sidenav{
     width: 50%;
-    /* background-image: url('https://img.freepik.com/free-vector/watercolor-nature-background-with-leaves_52683-59449.jpg?w=2000') */
+    background-image: url('https://cdn.wallpapersafari.com/99/65/5OoTDg.jpg')
 }
 
 .sidenav h2{
@@ -188,12 +190,17 @@ main{
   padding: 5px;
 }
 
+.collapsible.popout li{
+    background: white;
+
+}
+
 .collapsible.popout p{
     margin: 15px;
 }
 
 .collapsible-body li{
-    line-height: 24px
+    line-height: 24px;
 }
 
 .card-title {
