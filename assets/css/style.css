@@ -1,122 +1,40 @@
-/* @charset "UTF-8";
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-} */
+/* General */
 
 * {
-  /* margin: 0; */
-  /* padding: 0; */
-  /* Padding and border are included in the element's total width and height
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box; */
-  /* box-sizing: border-box; */
   font: bold 14px Aria, sans-serif;
-  /* list-style: none; */
-  /* text-decoration: none; */
 }
-body{
-   background: url('https://img.freepik.com/free-vector/watercolor-nature-background-with-leaves_52683-59449.jpg?w=2000') repeat;
-}
-html {
-  height: 100%;
-  background: white;
-  background: radial-gradient(circle, #fff 20%, #ccc);
+
+body {
+  background: url("https://img.freepik.com/free-vector/watercolor-nature-background-with-leaves_52683-59449.jpg?w=2000")
+    repeat;
   background-size: cover;
 }
-main{
- 
-  /* background-size:100vh; */
-  height: 100vh
+
+main {
+  height: 100vh;
 }
+
+p {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+li {
+  margin: 20px;
+}
+
+ul {
+  text-align: left;
+}
+
 .container {
   justify-content: space-between;
   width: 50%;
   display: flex;
 }
 
+/* Header and search */
 .alert .alert-link {
   font-weight: normal;
   color: #fff;
@@ -146,16 +64,32 @@ main{
   display: flex;
 }
 
+#searchbutton {
+  margin-bottom: 20px;
+}
+
 .buttons {
   padding: 0 10px;
 }
 
-/* article {
-    justify-content: center;
-    font-size: 30px;
-    width: 100%;
-    display: flex;
-} */
+a {
+  text-decoration: none;
+}
+#favorites {
+  border: 1px solid rgb(57, 141, 86);
+  border-radius: 6px;
+  background-color: white;
+  justify-content: center;
+  box-shadow: 0 0 5px rgb(57, 141, 86);
+}
+
+.favorite i {
+  transition: all 0.2s ease-in-out;
+}
+
+.favorite i:hover {
+  font-size: 40px;
+}
 
 /* Add a white background color to the Footer */
 .footer {
@@ -170,95 +104,50 @@ main{
   text-align: center;
 }
 
-.sidenav{
-    width: 50%;
-    background-image: url('https://cdn.wallpapersafari.com/99/65/5OoTDg.jpg')
+/* sidenav */
+.sidenav {
+  width: 50%;
+  background-image: url("https://cdn.wallpapersafari.com/99/65/5OoTDg.jpg");
 }
 
-.sidenav h2{
-    font-weight: bold;
-    font-size: 24pt;
-    padding: 0 10px
+.sidenav h2 {
+  font-weight: bold;
+  font-size: 24pt;
+  padding: 0 10px;
 }
 
-.sidenav p{
-    padding: 10px 20px;
+.sidenav p {
+  padding: 10px 20px;
 }
 
-.collapsible.popout > li.active{
+/* collapsibles */
+.collapsible.popout > li.active {
   margin: 24px 10px;
   padding: 5px;
 }
 
-.collapsible.popout li{
-    background: white;
-
+.collapsible.popout li {
+  background: white;
 }
 
-.collapsible.popout p{
-    margin: 15px;
+.collapsible.popout p {
+  margin: 15px;
 }
 
-.collapsible-body li{
-    line-height: 24px;
+.collapsible-body li {
+  line-height: 24px;
 }
 
+/* cards */
 .card-title {
-    margin-left: 100px;
-    background-color: rgb(128, 196, 231);
-    
+  margin-left: 100px;
+  background-color: rgb(128, 196, 231);
 }
 
 .card-content {
-    background-color: bisque;
-}
-
-span {
-    text-align: right;
-}
-
-p {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-
-li {
-    margin: 20px;
+  background-color: bisque;
 }
 
 .descList {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-
-ul {
-    text-align: left;
-}
-
-#favorites{
- border: 1px solid rgb(57, 141, 86);
- border-radius: 6px;
- background-color: white;
- /* margin: 20px 0; */
- justify-content: center ;
- box-shadow: 0 0 5px rgb(57, 141, 86);
-}
-
-#favorite{
-  transition: all .2s ease-in-out
-}
-
-#favorite:hover{
-  font-size:16px;
-}
-
-#searchbutton{
-  margin-bottom: 20px
-}
-
-/* input{
-  color:white
-}
-label{
-  color:white
-} */

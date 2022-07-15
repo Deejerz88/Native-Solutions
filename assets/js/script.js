@@ -5,10 +5,11 @@ const taxonomyEl = $("#taxonomy");
 const advanced = $("#advanced");
 const endangermentEl = $("#endangerment");
 const locationEl = $("#location");
-const favContainer = $('#favorites')
-const quickSearch = $('#quick-search')
-let favorites
+const favContainer = $("#favorites");
+const quickSearch = $("#quick-search");
+let favorites;
 searchInput.val("Michigan");
+
 //Get API Keys from AWS Lambda
 const apiURL =
   "https://zx3eyuody3fc25me63au7ukbki0jqehi.lambda-url.us-east-2.on.aws/";
@@ -20,20 +21,14 @@ fetch(apiURL).then((res) => {
     });
 });
 
-const submitHandler = (e) => {
-  e.preventDefault();
-  const location = getState(searchInput.val());
-};
-
+//Get nation/subnation for API Search
 const getState = (location) => {
   const apiKey = config.GOOGLE_API;
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${apiKey}`;
   fetch(url).then((res) => {
     if (res.ok)
       res.json().then((data) => {
-        // console.log(data);
         const address = data.results[0].address_components;
-        console.log({address})
         let state;
         let country;
         address.forEach((component, i) => {
@@ -42,9 +37,6 @@ const getState = (location) => {
           else if (component.types[0] === "country")
             country = component.short_name;
         });
-
-        // const state = data.results[0].address_components[2].short_name;
-        // const country = data.results[0].address_components[3].short_name
         const location = { state: state, country: country };
         getData(location);
         return location;
@@ -52,17 +44,17 @@ const getState = (location) => {
   });
 };
 
+//Get list of local plants/animals based on search criteria
 const getData = (location) => {
   //Search for plants/animals
-  const plantAnimal = $("input[name=group1]:checked").next().text()
-  console.log(plantAnimal)
+  const plantAnimal = $("input[name=group1]:checked").next().text();
+  console.log(plantAnimal);
   let url = "https://explorer.natureserve.org/api/data/speciesSearch";
-  const qs = quickSearch.val()
+  const qs = quickSearch.val();
   //Future Filters: quick search, status (endangerment), location (Country, state), species taxonomy (scientific & informal searches),
   let searchCriteria = {};
-  // const taxSearch = taxonomyEl.val()
   searchCriteria.criteriaType = "species";
-  let locType = !!location.state ? "subnation":"nation"
+  let locType = !!location.state ? "subnation" : "nation";
   searchCriteria.locationCriteria = [
     {
       paramType: locType,
@@ -70,7 +62,6 @@ const getData = (location) => {
       nation: location.country,
     },
   ];
-
   if (!!qs)
     searchCriteria.textCriteria = [
       { paramType: "quickSearch", searchToken: qs },
@@ -86,11 +77,10 @@ const getData = (location) => {
   //   },
   // ];
 
-  // console.log(searchCriteria)
   if (!!plantAnimal)
-  searchCriteria.speciesTaxonomyCriteria = [
-    { paramType: "informalTaxonomy", informalTaxonomy: plantAnimal },
-  ];
+    searchCriteria.speciesTaxonomyCriteria = [
+      { paramType: "informalTaxonomy", informalTaxonomy: plantAnimal },
+    ];
   // if (!!locationEl.val())
   //   searchCriteria.locationCriteria = [
   //     {
@@ -100,7 +90,6 @@ const getData = (location) => {
   //     },
   //   ];
 
-  // console.log({ searchCriteria });
   fetch(url, {
     method: "POST",
     mode: "cors",
@@ -112,7 +101,7 @@ const getData = (location) => {
     if (res.ok)
       res.json().then((data) => {
         console.log(data, data.results);
-        if (!!data.results) searchResults.empty()
+        if (!!data.results) searchResults.empty();
         data.results.forEach((organism) => {
           getOrganismInfo(organism.uniqueId);
         });
@@ -120,26 +109,23 @@ const getData = (location) => {
   });
 };
 
-searchBtn.on("click", submitHandler);
-
-const getOrganismInfo = (id,origin) => {
-  //Get Plant Info
+//Get info about individual plant/animal
+const getOrganismInfo = (id, origin) => {
   let url = `https://explorer.natureserve.org/api/data/taxon/${id}`;
-  // let url = "http://plants.usda.gov/api/plants/search";
   fetch(url).then((res) => {
     if (res.ok)
       res.json().then((data) => {
-        console.log(data.primaryCommonName, data);
-        if (origin !== 'favorites') {
+        if (origin !== "favorites") {
           createCard(data);
-        } else{populateSidenav(data)}
+        } else {
+          populateSidenav(data);
+        }
       });
   });
 };
 
+//Generate individual cards to append to #search-results
 const createCard = (data) => {
-  //
-
   const sciName = data.scientificName;
   const commonName = data.primaryCommonName;
   const id = data.uniqueId;
@@ -148,8 +134,6 @@ const createCard = (data) => {
   const imgContainer = $("<div>");
   const img = $("<img>");
   const title = $("<span>");
-  // const fabDiv = $("<div>");
-  const cardContainer = $("<div>");
   const col = $("<div>");
   const fab = $("<a>");
   const icon = $("<i>");
@@ -157,26 +141,26 @@ const createCard = (data) => {
   const action = $("<footer>");
   const link = $("<a>");
 
-  cardContainer.addClass("row");
   col.addClass("col s6 m6 l6");
   card.addClass("card");
   // imgContainer.addClass("card-image");
   title.addClass("card-title");
-  // fabDiv.addClass("row");
-  cardContainer.append(col.append(card));
-
   content.addClass("card-content");
   action.addClass("card-action");
-  //
+
+  //TODO: find images
   // const imgUrl = getImage(sciName)
   // img.attr({ src: `https://via.placeholder.com/100` }).css({ width: 100 });
 
   title.text(commonName);
-  // title.css({ color: "black" });
 
+  //Button that opens sidenav
   fab
     .attr({ href: "#", "data-target": "slide-out" })
-    .addClass("btn-floating halfway-fab red sidenav-trigger pulse");
+    .addClass("btn-floating halfway-fab red sidenav-trigger pulse")
+    .on("click", (e) => {
+      populateSidenav(data);
+    });
   icon.addClass("material-icons").text("info");
   fab.append(icon);
 
@@ -184,33 +168,78 @@ const createCard = (data) => {
 
   content.html(`<b>Scientific Name:</b> ${sciName} <p>${descText}`);
   content.css({ color: "black" });
-  // https://explorer.natureserve.org/Taxon/${id}/${sciName}
+
+  //Add to favorites link
   link
     .attr({
       href: `#!`,
     })
-    .html('<i style="color:red" class="material-icons">favorite</i> Add to Favorites')
+    .html(
+      '<i style="color:red" class="material-icons">favorite</i> Add to Favorites'
+    )
     .on("click", addToFavorites)
-    .data({ "id": data.uniqueId,"name":commonName });
+    .data({ id: data.uniqueId, name: commonName });
   action.append(link);
-
-  fab.on("click", (e) => {
-    populateSidenav(data);
-  });
 
   imgContainer.append(img, title, fab);
   card.append(imgContainer, content, action);
-  cardContainer.append(card);
   searchResults.append(card);
 };
 
+//Add plant/animal to local storage as favorite
+const addToFavorites = (e) => {
+  e.stopPropagation();
+  favorites = JSON.parse(localStorage.getItem("natureFavorites"));
+  favorites = !!favorites ? favorites : {};
+  const tgt = $(e.target);
+  const id = tgt.data("id");
+  const name = tgt.data("name");
+  favorites[name] = id;
+  localStorage.setItem("natureFavorites", JSON.stringify(favorites));
+  showFavorites(favorites);
+};
+
+//Show Favorites under search
+const showFavorites = (favorites) => {
+  const row = $("<div>").addClass("row").attr({ id: "favRow" });
+  favorites = !!favorites
+    ? favorites
+    : JSON.parse(localStorage.getItem("natureFavorites"));
+  favorites = !!favorites ? favorites : {};
+  favArr = Object.entries(favorites);
+  let numCol = Math.floor(12 / favArr.length);
+  numCol = numCol > 0 ? numCol : 1;
+
+  favContainer.empty();
+  favContainer.append(
+    $("<h5>")
+      .text("Favorites:")
+      .css({ "font-weight": "bold", "margin-left": "5px" })
+  );
+  favArr.forEach((favorite) => {
+    const name = favorite[0];
+    const id = favorite[1];
+    row.append(
+      $("<div>")
+        .addClass(`valign-wrapper col s${numCol} favorite`)
+        .html(
+          `<a href='#' class='sidenav-trigger' data-target='slide-out'><i style='color:red' class="material-icons">favorite</i><b>${name}</b></a>`
+        )
+        .on("click", () => {
+          getOrganismInfo(id, "favorites");
+        })
+    );
+  });
+  favContainer.append(row);
+};
+
+//Get plant/animal image. Current API limit: 100 / day
 const getImage = (sciName) => {
-  let key = "AIzaSyClLuw93oZYShzT7DCia1VDsGLZQyiARm0";
-  let id = 'f70c22e56966f4573'
+  let key = config.GOOGLE_CS_KEY;
+  let id = config.GOOGLE_CS_ID;
   sciName = sciName.toString().replace(/ /g, "%20");
   let url = `https://www.googleapis.com/customsearch/v1?key=${key}&cx=${id}&q=${sciName}&searchType=image&imgSize=large&imgType=photo&num=1`;
   let imgUrl = "";
-  // console.log(url);
   fetch(url).then((res) => {
     if (res.ok) {
       res.json().then((imgData) => {
@@ -218,28 +247,25 @@ const getImage = (sciName) => {
       });
     } else console.log(res.error.message);
   });
-
-  console.log({imgUrl});
-  return imgUrl
+  return imgUrl;
 };
 
+//Populate sidenav w/ plant/animal info
 const populateSidenav = (data) => {
   sideNav.empty();
   const collapsible = $("<ul>");
   const title = $("<h2>");
   // const img = $("<img>");
   const desc = $("<p>");
-  // const background = $('<div>')
-  // const bgImg = $('<img>')
 
   let countries;
-
   const species = data.speciesGlobal;
   const sc = data.speciesCharacteristics;
   const ac = data.animalCharacteristics;
   const pc = data.plantCharacteristics;
   const rank = data.rankInfo;
   const type = !!ac ? ac : pc;
+
   title.text(data.primaryCommonName);
   // img
   //   .attr({ src: `https://via.placeholder.com/200` })
@@ -259,20 +285,10 @@ const populateSidenav = (data) => {
     "Migration",
     "Population & Endangerment",
   ];
-  collapsible.addClass("collapsible popout");
 
+  //Create collapsible for each category to store info
+  collapsible.addClass("collapsible popout");
   categories.forEach((category) => {
-    //animalCharacteristics{animalFoodHabits[array], animalPhenologies, animalPhenologyComments, foodHabitsComments,majorHabitat{object}, nonMigrant, localMigrant, longDistanceMigrant, mobilityMigrationComments,colonialBreeder,length,width,weight, subTypes}
-    //
-    //Plants
-    //plantCharacteristics {genusEconomicValue, economicComments, plantProductionMethods, plantDurations ,plantEconomicUses, plantCommercialImportances }
-    //
-    //
-    //endangerment: grank, grankReasons, rankInfo{shortTermTrend, shortTermTrendComments, longTermTrend,longTermTrendComments, popSize, popSizeComments, rangeExtent, rangeExtentComments, threatImpactAssigned, threatImpactComments, inventoryNeeds, protectionNeeds }, elementManagement { stewardshipOverview, biologicalResearchNeeds}
-    //
-    //
-    //
-    //General Info: nameCategory, primaryCommonName, formattedScientificName, speciesGlobal {family, genus, kingdom, phylum, taxclass, taxorder, informalTaxonomy} references,
     const content = $("<li>");
     const header = $("<a>");
     const body = $("<div>");
@@ -283,13 +299,12 @@ const populateSidenav = (data) => {
     body.addClass("collapsible-body");
 
     header.html(`<b>${category}</b>`);
-    // let bodyHtml = $('<span>');
 
     //General Info
     if (category === "General Info") {
       let bodyData = createBody(data);
-      console.log({bodyData})
-      if (!bodyData) return
+      console.log({ bodyData });
+      if (!bodyData) return;
       desc.html(bodyData);
       bodyText.append(desc);
     }
@@ -322,9 +337,7 @@ const populateSidenav = (data) => {
 
     //Habitat
     else if (category === "Habitat") {
-      //elementNationals, elementSubnationals
-      // let nationals = {};
-
+      //Table search bar
       let natSearch = $("<input>").attr({
         type: "text",
         id: "natSearch",
@@ -342,7 +355,7 @@ const populateSidenav = (data) => {
 
       let table = createTable(1, perPage, countries);
 
-      // console.log("adding pagination");
+      //Create Pagination
       let pagination = $("<div>").addClass("pagination");
       pagination.append(
         $("<a>")
@@ -367,7 +380,6 @@ const populateSidenav = (data) => {
           .attr({ href: "#!", id: "forward", onclick: `shiftPage(forward)` })
           .html("&raquo;")
       );
-      // console.log(pagination.html());
 
       let habitat = "<br>";
       try {
@@ -381,7 +393,7 @@ const populateSidenav = (data) => {
 
     //Food Habits
     else if (category === "Food Habits") {
-      if (!!pc) return
+      if (!!pc) return;
       const foodArr = type.animalFoodHabits;
       let foodDesc = type.foodHabitsComments;
       const ul = $("<ul>");
@@ -408,8 +420,7 @@ const populateSidenav = (data) => {
 
     //Phenology
     else if (category === "Phenology") {
-      if (!!pc) return
-      //animalPhenologies, animalPhenologyComments,
+      if (!!pc) return;
       let phenoDesc = type.animalPhenologyComments;
       const phenoArr = type.animalPhenologies;
       const ul = $("<ul>");
@@ -430,7 +441,7 @@ const populateSidenav = (data) => {
 
     //Migration
     else if (category === "Migration") {
-      if (!!pc) return
+      if (!!pc) return;
       const migArr = [
         "nonMigrant",
         "localMigrant",
@@ -500,9 +511,8 @@ const populateSidenav = (data) => {
       if (!!popNeeds) pop.append(`<b>Population Needs:</b> ${popNeeds}`);
       if (!!protectionNeeds)
         pop.append(`<b>Protection Needs:</b> ${protectionNeeds}`);
-      bodyText.append(pop);
+      if (!!pop) bodyText.append(pop);
     }
-    // bodyText.html(bodyHtml);
     content.append(
       header,
       body.append(info.append($("<li>").append(bodyText)))
@@ -512,13 +522,16 @@ const populateSidenav = (data) => {
   $(".collapsible").collapsible();
 };
 
+//Body of cards on main page and General Info of Side Nav
 const createBody = (data) => {
   const ac = data.animalCharacteristics;
-  console.log(!!ac)
   const pc = data.plantCharacteristics;
   const sc = data.speciesCharacteristics;
+
+  //Check if plant or animal
   const type = !!ac ? ac : pc;
 
+  //Lengt, width, and weight if animal
   if (!!ac) {
     let lww = "";
     if (!!type.length) lww += `<b>Length:</b> ${type.length}mm`;
@@ -534,11 +547,10 @@ const createBody = (data) => {
         : habitat;
     } catch (err) {}
   }
-  
-  
+
   let descText = sc.generalDescription;
 
-  descText = !!descText ? descText : ''
+  descText = !!descText ? descText : "";
 
   if (!!descText) {
     let descArray;
@@ -550,20 +562,19 @@ const createBody = (data) => {
       });
       descText = $("<ul>").append(descList.clone()).html();
       descText = lww + habitat + descText;
-    } catch (err) { }
+    } catch (err) {}
   }
   let char = sc.diagnosticCharacteristics;
 
-  if (!!char) descText = descText + '<br>' + char
-  console.log({descText})
+  if (!!char) descText = descText + "<br>" + char;
   return descText;
 };
 
+//Habitat table search filtering
 const searchNats = () => {
-  // Declare variables
-  let input, filter, tr, td, txtValue;
-  input = $("#natSearch");
-  filter = input.val().toUpperCase();
+  let filter, tr, td, txtValue;
+  filter = $("#natSearch").val().toUpperCase();
+  if (!filter) return;
   tr = $(".natRow");
   for (let i = 0; i < tr.length; i++) {
     const row = $(tr[i]);
@@ -582,65 +593,20 @@ const searchNats = () => {
   }
 };
 
-const addToFavorites = (e) => {
-  e.stopPropagation();
-  favorites = JSON.parse(localStorage.getItem("natureFavorites"));
-  favorites = !!favorites ? favorites : {};
-  const tgt = $(e.target);
-  const id = tgt.data("id");
-  const name = tgt.data("name");
-  console.log(id, name);
-  favorites[name] = id;
-  localStorage.setItem("natureFavorites", JSON.stringify(favorites));
-  showFavorites(favorites);
-};
-
-const showFavorites = (favorites) => {
-  favContainer.empty();
-
-  favContainer.append($('<h5>').text('Favorites:').css({'font-weight':'bold','margin-left':'5px'}))
-  console.log({ favorites })
-  favorites = !!favorites
-    ? favorites
-    : JSON.parse(localStorage.getItem("natureFavorites"));
-   favorites = !!favorites ? favorites : {};
-  const row = $('<div>').addClass('row').attr({id:'favRow'})
-  favArr = Object.entries(favorites);
-  let numCol = Math.floor(12 / favArr.length);
-  numCol = numCol > 0 ? numCol:1
-  favArr.forEach(favorite => {
-    const name = favorite[0]
-    const id = favorite[1]
-    row.append(
-     
-      $("<div>")
-        .addClass(`valign-wrapper col s${numCol} favorite`)
-        .html(
-          `<a href='#' class='sidenav-trigger' data-target='slide-out'><i style='color:red' class="material-icons">favorite</i><b>${name}</b></a>`
-        )
-        .on("click", () => {
-          getOrganismInfo(id,'favorites')
-        }))
-  })
-
-favContainer.append(row)
-}
-
-
+//Generate Habitat Table
 const createTable = (page, perPage, countries) => {
   let table = $("<table>")
     .attr({ id: "national-table" })
     .addClass("striped")
-    .data({ countries: countries, perPage, perPage });
+    .data({ countries: countries, perPage: perPage });
   const thead = $("<thead>").append($("<tr>"));
   const headers = ["Country", "State", "Native", "Exotic", "Hybrid"];
   headers.forEach((header, i) => {
-    let th = $('<th>')
-    if (i>1) th.addClass('center-align')
-    thead.append(th.append(header))
-  })
+    let th = $("<th>");
+    if (i > 1) th.addClass("center-align");
+    thead.append(th.append(header));
+  });
   const tbody = $("<tbody>");
-
   let numRows = 0;
   let end = page * perPage;
   let start = end - perPage + 1;
@@ -651,8 +617,6 @@ const createTable = (page, perPage, countries) => {
     const subNationals = country.elementSubnationals;
     for (let j = 0; j < subNationals.length; j++) {
       numRows++;
-      // console.log({ numRows });
-
       const subNat = subNationals[j];
       const tr = $("<tr>").addClass("natRow");
       const subnation = subNat.subnation.nameEn;
@@ -665,9 +629,9 @@ const createTable = (page, perPage, countries) => {
 
       const dataSet = [countryName, subnation, native, exotic, hybrid];
       dataSet.forEach((data) => {
-        const td = $("<td>")
-        if (data !== true && data !== false) td.addClass("tableFilter")
-        else td.addClass('center-align')
+        const td = $("<td>");
+        if (data !== true && data !== false) td.addClass("tableFilter");
+        else td.addClass("center-align");
         switch (data) {
           case true:
             data =
@@ -677,42 +641,28 @@ const createTable = (page, perPage, countries) => {
             data = '<i style="color:red" class="material-icons">cancel</i>';
             break;
         }
-
         tr.append(td.html(data));
       });
       tbody.append(tr);
     }
   }
-
-  // return
-  // let pagination = `<ul class="pagination">
-  //   <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-  //   <li class="active"><a href="#!">${page}</a></li>
-  //   <li class="waves-effect"><a href="#!">${page+1}</a></li>
-  //   <li class="waves-effect"><a href="#!">${page+2}</a></li>
-  //   <li class="waves-effect"><a href="#!">${page+3}</a></li>
-  //   <li class="waves-effect"><a href="#!">${page+4}</a></li>
-  //   <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-  // </ul>`;
-
   table.append(thead, tbody);
   return table;
 };
 
+//Pagination jump to page
 const changePage = (page) => {
-  console.log(page);
   const natTable = $("#national-table");
   const countries = natTable.data("countries");
   const perPage = natTable.data("perPage");
   const table = createTable(page, perPage, countries);
   natTable.replaceWith(table);
-  console.log($(`#page${page}`).addClass("active"));
   $(".pagination .active").removeClass("active");
   $(`#page${page}`).addClass("active");
 };
 
+//Pagination back/forward 1 page
 const shiftPage = (dir) => {
-  console.log(dir.id);
   let currPage = Number($(".pagination .active").text());
   const page = dir.id === "back" ? currPage - 1 : currPage + 1;
   changePage(page);
@@ -724,8 +674,12 @@ $("body").append(sideNav.addClass("sidenav").attr({ id: "slide-out" }));
 
 $(document).ready(function () {
   $(".sidenav").sidenav();
-  
 });
 
-// getFavorites();
+const submitHandler = (e) => {
+  e.preventDefault();
+  getState(searchInput.val());
+};
+searchBtn.on("click", submitHandler);
+
 showFavorites();
